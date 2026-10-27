@@ -173,7 +173,7 @@ def page(fiche):
     for p in sorted((ICI / "prompts").glob("*.md")):
         corps.append(rendre(re.sub(r"\A# ", "# Étape ", p.read_text(encoding="utf-8"))))
     corps.append(rendre(apres(utilisateur)))
-    html_corps = "\n".join(corps)
+    html_corps = "\n".join(corps).replace("<table>", '<div class="tableau"><table>').replace("</table>", "</table></div>")
 
     titres = re.findall(r"<h1>(.*?)</h1>", html_corps)
     numeros = iter(range(len(titres)))
@@ -186,10 +186,13 @@ def page(fiche):
         for k, (lib, ex) in champs.items())
 
     accent = valeurs.get("{COULEUR_ACCENT}", "#FF5C2A")
-    css = build_doc.CSS.replace("#FF5C2A", accent) + CSS
+    css = CSS.replace("--charte:#FF5C2A", f"--charte:{accent}") if re.fullmatch(r"#[0-9A-Fa-f]{6}", accent) else CSS
     titre = f"Guide complet - {entreprise}"
     return titre, f"""<!doctype html><html lang="fr"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(titre)}</title><style>{css}</style></head><body>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{E(titre)}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@400;600;700&family=Lexend+Deca:wght@600&display=swap">
+<style>{css}</style></head><body><main>
 <span class="badge">Toog Expertise</span>
 <h1 class="titre">L'agent fiche Google de {E(entreprise)} : le guide complet</h1>
 <p>De la connexion au VPS du client jusqu'à l'agent en ligne. Suivez les étapes dans l'ordre. Pour chaque étape avec un prompt :
@@ -198,24 +201,53 @@ cliquez sur « Copier », collez dans Claude Code, attendez qu'il ait fini, puis
 <div class="grille">{cases}</div></div>
 <h2>Sommaire</h2><ol class="sommaire">{sommaire}</ol>
 {html_corps}
-<div id="toast"></div>
+</main><div id="toast"></div>
 <script>{JS}</script></body></html>"""
 
 
 CSS = """
-body{padding:0 16px}
-.carte{background:#fff;border:1px solid #DEDACC;border-radius:14px;padding:4px 18px 16px;margin:18px 0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-label{font-size:9.5pt;font-weight:600;display:flex;flex-direction:column;gap:4px}
-input{font:inherit;font-weight:400;padding:7px 10px;border:1px solid #DEDACC;border-radius:8px}
-.v{background:#E7F6EC;border-radius:4px;padding:0 3px}
-.v.vide{background:#FFE9A8;color:#7A5B00}
-.prompt,.cmd{position:relative}
-.copier{position:absolute;top:8px;right:10px;font:inherit;font-size:9pt;font-weight:700;border:0;border-radius:20px;padding:5px 14px;cursor:pointer;background:#FF5C2A;color:#fff}
-.lab{padding-right:90px}
+/* une colonne de lecture ; chaque bloc à coller est une carte avec son bouton Copier */
+:root{--charte:#FF5C2A;--bg:#FAF8F4;--surface:#FFFFFF;--fg:#1F242E;--muted:#5B6070;--accent:var(--charte);
+--accent-soft:color-mix(in srgb,var(--charte) 9%,#fff);--on-accent:#fff;--line:#E3DED2;--code:#F1EEE3;
+--ok-bg:#E3F4E9;--ok-fg:#1E6B3A;--warn-bg:#FFE9A8;--warn-fg:#6B4F00;--badge:#FFDB21;--badge-fg:#1F242E;
+--f-titre:'Lexend Deca',system-ui,sans-serif;--f-texte:'DM Sans',system-ui,sans-serif;--f-code:'DM Mono',ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171C;--surface:#1E2128;--fg:#ECEAE4;--muted:#A3A7B3;
+--accent:color-mix(in srgb,var(--charte) 80%,#fff);--accent-soft:color-mix(in srgb,var(--charte) 14%,#1E2128);--on-accent:#15171C;
+--line:#343843;--code:#2A2D36;--ok-bg:#1D3326;--ok-fg:#9BE0B4;--warn-bg:#3D3214;--warn-fg:#F5D27A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15171C;--surface:#1E2128;--fg:#ECEAE4;--muted:#A3A7B3;
+--accent:color-mix(in srgb,var(--charte) 80%,#fff);--accent-soft:color-mix(in srgb,var(--charte) 14%,#1E2128);--on-accent:#15171C;
+--line:#343843;--code:#2A2D36;--ok-bg:#1D3326;--ok-fg:#9BE0B4;--warn-bg:#3D3214;--warn-fg:#F5D27A;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-texte);font-size:16px;line-height:1.55;margin:0;
+padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+main{max-width:820px;margin:0 auto}
+h1{font-family:var(--f-titre);font-weight:600;font-size:1.55rem;line-height:1.25;text-wrap:balance;margin:48px 0 8px;padding-top:14px;border-top:3px solid var(--accent)}
+h1.titre{border:none;font-size:2.1rem;margin-top:12px;padding-top:0}
+h2{font-family:var(--f-titre);font-weight:600;font-size:1.1rem;color:var(--accent);margin:24px 0 8px}
+p,li{max-width:68ch}
+a{color:var(--accent)}
+.badge{display:inline-block;background:var(--badge);color:var(--badge-fg);font-weight:700;font-size:.75rem;padding:3px 10px;border-radius:20px}
+.prompt,.cmd{position:relative;border-radius:12px;padding:12px 16px;margin:12px 0;min-width:0}
+.prompt{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.cmd{background:var(--surface);border:1px solid var(--line)}
+.lab{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;color:var(--accent);padding-right:96px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-code);font-size:.85rem;line-height:1.5;margin:0}
+code{font-family:var(--f-code);font-size:.88em;background:var(--code);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+.tableau{overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--code)}
+.carte{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 18px 18px;margin:20px 0}
+.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{font-size:.8rem;font-weight:600;display:flex;flex-direction:column;gap:5px;min-width:0}
+input{font:inherit;font-size:.92rem;font-weight:400;padding:8px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);min-width:0}
+input:focus-visible,.copier:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.v{background:var(--ok-bg);color:var(--ok-fg);border-radius:4px;padding:0 3px}
+.v.vide{background:var(--warn-bg);color:var(--warn-fg)}
+.copier{position:absolute;top:9px;right:10px;font:inherit;font-size:.78rem;font-weight:700;border:0;border-radius:20px;padding:6px 15px;cursor:pointer;background:var(--accent);color:var(--on-accent)}
 .sommaire a{color:inherit}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1F242E;color:#fff;padding:10px 18px;border-radius:10px;font-size:10pt;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100vw - 32px)}
 #toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
 @media print{.copier{display:none}}
 """
 
