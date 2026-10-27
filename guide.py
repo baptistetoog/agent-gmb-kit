@@ -64,54 +64,41 @@ Remplissez les cases en haut de cette page : elles se recopient dans toutes les 
 
 **Ce qu'on voit à la fin :** la commande `ssh {jeton("ALIAS")}` ouvre le serveur du client sans demander de mot de passe. Tous les prompts s'en servent.
 
-Toutes ces commandes se lancent dans le terminal de votre ordinateur.
+Pas besoin d'avoir déjà une clé SSH : Claude Code la crée pour vous. Il tourne sur votre ordinateur, donc la clé est créée sur votre ordinateur, et c'est elle qui ouvrira le serveur du client. Aucun compte n'est à créer pour ça : on se connecte au VPS avec l'accès root donné par l'hébergeur.
 
-1. Vérifier que vous avez une clé SSH (si la commande affiche une ligne qui commence par ssh-ed25519, passez au point 2) :
-
-```bash
-cat ~/.ssh/id_ed25519.pub
-```
-
-Sinon, créez-la (appuyez sur Entrée à chaque question) :
-
-```bash
-ssh-keygen -t ed25519 -C "toog-expertise"
-```
-
-2. Déposer votre clé sur le VPS. Tapez « yes » à la première question, puis le mot de passe root donné par l'hébergeur (il ne s'affiche pas). C'est la seule fois où il sera demandé. Si l'hébergeur a déjà installé votre clé, sautez ce point.
-
-```bash
-ssh-copy-id root@{jeton("IP")}
-```
-
-3. Vérifier que le nom du raccourci n'est pas déjà pris. Si `{jeton("ALIAS")}` apparaît dans la liste (par exemple pour le serveur de la démo), changez le « Nom du raccourci SSH » en haut de la page, par exemple vps-{utilisateur} : tous les prompts suivront.
-
-```bash
-grep -n "^Host " ~/.ssh/config
-```
-
-4. Créer le raccourci :
-
-```bash
-mkdir -p ~/.ssh && cat >> ~/.ssh/config <<'FIN'
-
-Host {jeton("ALIAS")}
-  HostName {jeton("IP")}
-  User root
-  IdentityFile ~/.ssh/id_ed25519
-FIN
-```
-
-5. Tester. On doit voir le nom du serveur, « Ubuntu 24.04 » et « root », sans mot de passe :
-
-```bash
-ssh {jeton("ALIAS")} 'hostname; lsb_release -ds; whoami'
-```
-
-6. Ouvrir Claude Code dans un dossier de travail pour ce client. C'est là qu'on collera tous les prompts, dans la même discussion. Quand Claude demande l'autorisation de lancer des commandes ssh, acceptez.
+1. Ouvrir Claude Code dans un dossier de travail pour ce client (dans le Terminal de votre ordinateur). C'est là qu'on collera tous les prompts, dans la même discussion. Quand Claude demande l'autorisation de lancer des commandes, acceptez.
 
 ```bash
 mkdir -p ~/Clients/{utilisateur} && cd ~/Clients/{utilisateur} && claude
+```
+
+2. Coller ce prompt : Claude crée la clé, le raccourci, et vous donne la clé publique.
+
+```
+Je vais installer un agent sur le VPS d'un client. Prépare la connexion SSH depuis cet ordinateur :
+1. Si ~/.ssh/id_ed25519 n'existe pas, crée une clé SSH ed25519 (commentaire « toog-expertise », sans phrase de passe). Si elle existe déjà, garde-la. Ne touche à aucune autre clé.
+2. Dans ~/.ssh/config, ajoute ce raccourci s'il n'existe pas déjà :
+   Host {jeton("ALIAS")}
+     HostName {jeton("IP")}
+     User root
+     IdentityFile ~/.ssh/id_ed25519
+   Si un raccourci « {jeton("ALIAS")} » existe déjà et pointe vers une autre adresse, ne le modifie pas : arrête-toi et dis-le-moi.
+3. Affiche-moi ma clé PUBLIQUE (~/.ssh/id_ed25519.pub) sur une seule ligne, puis la commande exacte à lancer moi-même pour la déposer sur le serveur.
+Ne me demande jamais le mot de passe root et ne l'écris nulle part : je le taperai moi-même, dans mon terminal.
+```
+
+3. Déposer la clé sur le VPS du client (une seule fois). Deux façons, au choix :
+- **Vous avez le mot de passe root** : dans un Terminal de votre ordinateur (pas dans la discussion avec Claude), lancez la commande ci-dessous, tapez « yes », puis le mot de passe root (il ne s'affiche pas pendant la frappe).
+- **Le client préfère ne pas donner son mot de passe** : envoyez-lui la clé publique affichée par Claude (la ligne qui commence par ssh-ed25519). Il l'ajoute dans l'espace client de son hébergeur, rubrique « Clés SSH » (ou dans /root/.ssh/authorized_keys). La clé publique s'envoie sans risque ; le fichier id_ed25519 (sans .pub) ne se donne jamais.
+
+```bash
+ssh-copy-id -i ~/.ssh/id_ed25519.pub root@{jeton("IP")}
+```
+
+4. Tester (dans le Terminal, ou demandez à Claude de le faire). On doit voir le nom du serveur, « Ubuntu 24.04 » et « root », sans mot de passe :
+
+```bash
+ssh {jeton("ALIAS")} 'hostname; lsb_release -ds; whoami'
 ```
 
 # Étape B. Créer le sous-domaine
