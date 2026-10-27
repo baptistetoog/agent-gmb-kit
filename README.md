@@ -21,7 +21,8 @@ Tout ce qui change d'une entreprise à l'autre (nom, activité, périmètre, ton
    python3 personnaliser.py exemples/newjump.md
    ```
    Les 14 prompts personnalisés et le document HTML sont créés dans `mes-prompts/<entreprise>/`. Le script signale ce qui reste à compléter.
-3. Coller les prompts dans Claude Code, dans l'ordre, un par un, en vérifiant « ce qu'on voit à la fin » avant de passer au suivant.
+3. (Facultatif) Vérifier le kit : `python3 outils/tester-kit.py` contrôle les variables, la personnalisation pour un établissement et pour un réseau, le document et tous les liens publics.
+4. Coller les prompts dans Claude Code, dans l'ordre, un par un, en vérifiant « ce qu'on voit à la fin » avant de passer au suivant.
 
 ## Avant de commencer
 
@@ -67,7 +68,7 @@ Les paramètres sont recopiés dans la section « Paramètres » du `PROJET.md` 
 - `parametres.md` : la fiche de paramètres à remplir. `exemples/` : des fiches déjà remplies (NewJump, réseau de parcs).
 - `personnaliser.py` : fabrique les prompts et le document d'une entreprise. `build_doc.py` : le document du kit générique (`livrable/`).
 - `kit/bureau3d.js` : la scène 3D du bureau (personnage paramétrable : nom, couleurs, badge, accessoire, fond). Les prompts la téléchargent directement depuis ce dépôt : il doit donc être public.
-- `outils/` : pour le formateur. `enregistrer-etape.sh` enregistre le code d'une instance de test après chaque prompt (étiquettes `etape-NN`) et `construire-public.sh` en tire le dépôt public, sans donnée client ni secret.
+- `outils/` : pour le formateur. `tester-kit.py` teste tout le parcours du kit sans serveur. `enregistrer-etape.sh` enregistre le code d'une instance de test après chaque prompt (étiquettes `etape-NN`) et `construire-public.sh` en tire le dépôt public, sans donnée client ni secret.
 
 ## Code de référence par étape
 
