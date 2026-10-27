@@ -1,0 +1,10 @@
+{
+  "remplacements": [
+    ["agent.mon-instance-de-test.fr", "agent.monentreprise.fr"],
+    ["/home/montest", "/home/monentreprise"],
+    ["montest", "monentreprise"],
+    ["Nom du client de test", "Mon Entreprise"],
+    ["site-du-client-de-test.fr", "monentreprise.fr"]
+  ],
+  "interdit": "nom-du-client-de-test|mon-email@exemple\\.fr|adresse-ip-du-vps"
+}

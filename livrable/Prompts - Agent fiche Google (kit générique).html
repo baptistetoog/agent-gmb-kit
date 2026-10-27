@@ -1,0 +1,557 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Prompts - Agent fiche Google (kit générique)</title><style>
+body{font-family:'DM Sans',Arial,sans-serif;color:#1F242E;max-width:820px;margin:40px auto;line-height:1.5;font-size:11pt}
+h1{font-family:'Lexend Deca',Arial,sans-serif;font-weight:600;font-size:20pt;color:#1F242E;margin:36px 0 6px;padding-top:10px;border-top:3px solid #FF5C2A}
+h1.titre{border:none;font-size:26pt}
+h2{font-family:'Lexend Deca',Arial,sans-serif;font-weight:600;font-size:13pt;color:#FF5C2A;margin:20px 0 6px}
+.badge{display:inline-block;background:#FFDB21;color:#1F242E;font-weight:700;font-size:9pt;padding:3px 10px;border-radius:20px}
+.prompt,.cmd{border-radius:10px;padding:12px 16px;margin:10px 0}
+.prompt{background:#FFF4EF;border-left:5px solid #FF5C2A}
+.cmd{background:#FFFFFF;border:2px solid #FF5C2A;color:#1F242E}
+.lab{font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;color:#FF5C2A}
+pre{white-space:pre-wrap;font-family:'DM Mono',Consolas,monospace;font-size:9.5pt;margin:0}
+code{font-family:Consolas,monospace;background:#F1EEE3;padding:0 4px;border-radius:4px}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:10pt}
+th,td{border:1px solid #DEDACC;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#F1EEE3}
+a{color:#FF5C2A}
+</style></head><body><span class="badge">Toog Expertise</span><h1 class="titre">Créer l'agent fiche Google de votre entreprise : les prompts</h1><p>Les 14 étapes, dans l'ordre. Collez chaque prompt dans Claude Code, attendez qu'il ait fini, puis vérifiez « ce qu'on voit à la fin » avant de passer au suivant. Remplissez d'abord parametres.md et lancez personnaliser.py : les valeurs entre accolades seront remplacées par les vôtres. Code de référence et kit : <a href="{DEPOT}">{DEPOT}</a>.</p><p>Ce kit installe, en 14 prompts collés dans Claude Code, un agent IA qui gère les fiches Google Business Profile d&#x27;une entreprise. Il fonctionne pour un seul établissement comme pour un réseau (franchise, agences, parcs, magasins…), et pour tout type d&#x27;activité.</p>
+<p>L&#x27;outil obtenu : une page de connexion protégée, le bureau 3D de l&#x27;agent, une discussion en direct, sa mémoire, ses skills, la connexion aux fiches via Activepieces, les validations « Propose / Agit seul », un tableau de bord des fiches (avec une vue d&#x27;ensemble s&#x27;il y a plusieurs établissements), le site et la photothèque, les automatisations, et l&#x27;atelier où l&#x27;agent améliore son propre outil.</p>
+<p>Tout ce qui change d&#x27;une entreprise à l&#x27;autre (nom, activité, périmètre, ton, personnage, charte graphique) se règle dans <b>une seule fiche de paramètres</b>. Les prompts, eux, ne changent pas.</p>
+<h2>Les liens</h2>
+<ul>
+<li>Dépôt du kit : <a href="https://github.com/baptistetoog/agent-gmb-kit">https://github.com/baptistetoog/agent-gmb-kit</a></li>
+<li>Scène 3D téléchargée par le prompt 5 : <a href="https://raw.githubusercontent.com/baptistetoog/agent-gmb-kit/main/kit/bureau3d.js">https://raw.githubusercontent.com/baptistetoog/agent-gmb-kit/main/kit/bureau3d.js</a></li>
+<li>Démo en ligne de l&#x27;outil (instance de test) : <a href="https://gmb-demo.toog-expertise.app">https://gmb-demo.toog-expertise.app</a></li>
+<li>Toog Expertise : <a href="https://toog-expertise.app">https://toog-expertise.app</a></li>
+</ul>
+<h2>Utilisation</h2>
+<ol>
+<li>Copier <code>parametres.md</code> (ou partir d&#x27;un exemple de <code>exemples/</code>) et remplir la colonne « Valeur ».</li>
+<li>Lancer :</li>
+</ol>
+<p>   ```bash</p>
+<p>   python3 personnaliser.py exemples/newjump.md</p>
+<p>   ```</p>
+<p>   Les 14 prompts personnalisés et le document HTML sont créés dans <code>mes-prompts/&lt;entreprise&gt;/</code>. Le script signale ce qui reste à compléter.</p>
+<ol>
+<li>Coller les prompts dans Claude Code, dans l&#x27;ordre, un par un, en vérifiant « ce qu&#x27;on voit à la fin » avant de passer au suivant.</li>
+</ol>
+<h2>Avant de commencer</h2>
+<ul>
+<li>Un VPS Ubuntu 24.04 accessible depuis Claude Code par <code>ssh vps</code>.</li>
+<li>Un nom de domaine, dont on crée un sous-domaine.</li>
+<li>Un abonnement Claude (Pro ou Max).</li>
+<li>Un compte Activepieces avec une connexion Google My Business, reliée au compte Google qui gère la ou les fiches.</li>
+</ul>
+<h2>Les paramètres qui adaptent l&#x27;agent</h2>
+<table><tr><th>Paramètre</th><th>Ce qu&#x27;il change</th></tr><tr><td><code>{ACTIVITE}</code></td><td>les rubriques de la fiche d&#x27;identité de l&#x27;entreprise, les exemples des skills, le calendrier des posts</td></tr><tr><td><code>{ETABLISSEMENTS}</code></td><td>le périmètre : un établissement, ou plusieurs (sélecteur, vue d&#x27;ensemble, garde qui bloque les fiches hors périmètre, automatisations par établissement)</td></tr><tr><td><code>{TON}</code>, <code>{SIGNATURE}</code>, <code>{MOMENT_CLIENT}</code></td><td>la façon dont l&#x27;agent parle, signe les réponses aux avis et demande des avis</td></tr><tr><td><code>{NOM_AGENT}</code>, <code>{COULEUR_AGENT}</code>, <code>{COULEUR_YEUX}</code>, <code>{BADGE}</code>, <code>{ACCESSOIRE}</code></td><td>le personnage du bureau 3D</td></tr><tr><td><code>{COULEUR_FOND}</code>, <code>{COULEUR_ACCENT}</code>, <code>{COULEUR_ACCENT_2}</code>, <code>{COULEUR_TEXTE}</code>, <code>{POLICE_TITRES}</code>, <code>{POLICE_TEXTE}</code>, <code>{LOGO}</code>, <code>{CHARTE_CONSIGNES}</code></td><td>la charte de l&#x27;outil : toutes les couleurs sont définies dans un seul bloc de <code>design.css</code>, faciles à changer plus tard</td></tr></table>
+<p>Les paramètres sont recopiés dans la section « Paramètres » du <code>PROJET.md</code> de l&#x27;instance au prompt 3, et toutes les étapes suivantes s&#x27;y réfèrent.</p><h2>Sommaire</h2><ol><li>1. Préparer l&#x27;espace de l&#x27;agent sur le serveur</li><li>2. Créer la clé de connexion à Claude</li><li>3. Créer l&#x27;outil et son espace de connexion protégé</li><li>4. Mettre l&#x27;outil en ligne sur son sous-domaine</li><li>5. Donner vie à l&#x27;agent : son bureau, la discussion, son cerveau</li><li>6. La fiche de l&#x27;agent et sa mémoire</li><li>7. Les skills</li><li>8. Les connexions : API et MCP (Activepieces)</li><li>9. « Propose » ou « agit seul » : les validations</li><li>10. Le tableau de bord des fiches Google</li><li>11. Le site internet et les photos</li><li>12. Les automatisations</li><li>13. L&#x27;agent ajoute des fonctionnalités à son outil</li><li>14. Option : parler à son agent</li></ol><h1>1. Préparer l&#x27;espace de l&#x27;agent sur le serveur</h1>
+<p><b>Ce que fait l&#x27;apprenant :</b> il colle ce prompt dans Claude Code, sur son ordinateur.</p>
+<p><b>Ce qu&#x27;on voit à la fin :</b> un utilisateur dédié existe sur le VPS, avec Node et Claude Code installés.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible depuis ce terminal par la commande `ssh vps` (je suis root).
+Je veux y installer un agent IA pour mon entreprise, proprement et en sécurité.
+
+Prépare le serveur :
+1. Crée un utilisateur Linux dédié nommé {UTILISATEUR}, sans mot de passe et sans droits sudo. Tout le projet vivra dans son dossier personnel. Si l&#x27;utilisateur existe déjà, ne touche à rien et dis-le-moi.
+2. Vérifie que Node.js 22 (ou plus récent) est installé. Sinon, installe-le depuis le dépôt officiel NodeSource (fais `apt-get update` avant).
+3. Installe Claude Code pour cet utilisateur seulement, avec l&#x27;installeur officiel (`curl -fsSL https://claude.ai/install.sh | bash`, lancé en tant que {UTILISATEUR}). Vérifie que `claude --version` répond.
+4. Vérifie que le pare-feu laisse passer seulement SSH, HTTP et HTTPS. Ne ferme rien qui est déjà ouvert sans me demander.
+5. Vérifie que nginx et certbot sont installés (sinon installe-les).
+
+Règles : ne modifie rien qui appartient à un autre utilisateur ou à un autre site déjà présent sur ce serveur. À la fin, fais-moi un récapitulatif en 5 lignes de ce qui est en place.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez à Claude ce que vous voyez (« J&#x27;ai collé le prompt 1, et je vois … au lieu de … ») : il corrige tout seul. Rien n&#x27;est encore installé à cette étape, il n&#x27;y a donc rien à restaurer.</p><h1>2. Créer la clé de connexion à Claude</h1>
+<p><b>Ce que fait l&#x27;apprenant :</b> il crée, sur son propre ordinateur, la clé qui permettra à l&#x27;agent d&#x27;utiliser son abonnement Claude. On la colle dans l&#x27;outil plus tard, à l&#x27;étape 5, dans la case « Connecter Claude », qui affiche « ✅ Claude est connecté ».</p>
+<h2>À la main (1 minute)</h2>
+<p>Dans le terminal de son ordinateur :</p>
+<div class="cmd"><div class="lab">Commande à lancer dans le terminal</div><pre>claude setup-token</pre></div>
+<ol>
+<li>Le navigateur s&#x27;ouvre. On se connecte à son compte Claude (Pro ou Max) et on clique sur <b>Autoriser</b>.</li>
+<li>La page affiche un code : on clique sur <b>Copier</b>, on revient dans le terminal, on colle (Cmd+V) et on appuie sur Entrée.</li>
+<li>Le terminal affiche la clé, qui commence par <code>sk-ant-oat01-…</code>. On la garde de côté, par exemple dans son gestionnaire de mots de passe : on ne la reverra plus.</li>
+</ol>
+<p><b>Ne jamais coller cette clé dans une discussion avec Claude.</b> Elle se colle uniquement dans la case « Connecter Claude » de l&#x27;outil.</p>
+<p><b>Ce qu&#x27;on voit à la fin :</b> une clé <code>sk-ant-oat01-…</code> mise de côté.</p><h1>3. Créer l&#x27;outil et son espace de connexion protégé</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> l&#x27;outil tourne sur le serveur, avec une page de connexion. Seules les personnes qui ont un compte peuvent entrer.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Le projet appartient à l&#x27;utilisateur Linux {UTILISATEUR}, qui a déjà Node 22 et Claude Code.
+
+Je veux créer l&#x27;outil web de mon agent IA, pour l&#x27;entreprise {ENTREPRISE}. Commence par la base : le serveur et l&#x27;espace de connexion protégé.
+
+Voici les paramètres du projet. Toutes les étapes suivantes s&#x27;y réfèrent : recopie-les tels quels dans une section « Paramètres » de PROJET.md (voir plus bas).
+- Entreprise : {ENTREPRISE} — site : {SITE_WEB} — activité : {ACTIVITE}
+- Périmètre (établissements gérés par l&#x27;agent) : {ETABLISSEMENTS}
+- Ton : {TON} — signature des réponses aux avis : {SIGNATURE} — on demande un avis après : {MOMENT_CLIENT}
+- Agent : {NOM_AGENT} (corps {COULEUR_AGENT}, yeux {COULEUR_YEUX}, badge « {BADGE} », accessoire : {ACCESSOIRE})
+- Charte : fond {COULEUR_FOND}, accent {COULEUR_ACCENT}, accent secondaire {COULEUR_ACCENT_2}, texte {COULEUR_TEXTE}, police des titres « {POLICE_TITRES} », police du texte « {POLICE_TEXTE} » (Google Fonts), logo : {LOGO}, consignes en plus : {CHARTE_CONSIGNES}
+
+Organisation des dossiers (dans /home/{UTILISATEUR}) :
+- app/ : le code de l&#x27;outil (serveur + pages)
+- data/ : les données privées (comptes, sessions, historique, connexions), droits 700
+- agent/ : le dossier de travail de l&#x27;agent (on le remplira plus tard)
+- PROJET.md : la mémoire du projet (voir plus bas)
+
+Le serveur :
+- Un seul fichier app/server.js en Node.js 22, SANS aucune dépendance npm (uniquement les modules intégrés : http, crypto, fs, path, child_process…).
+- Il écoute seulement sur 127.0.0.1:{PORT} (nginx sera devant plus tard).
+- Il sert les pages du dossier app/public/.
+
+L&#x27;espace de connexion :
+- Page app/public/connexion.html : e-mail + mot de passe, sobre, propre, adaptée au mobile. Elle suit la charte des paramètres : fond {COULEUR_FOND}, bouton et accents {COULEUR_ACCENT}, texte {COULEUR_TEXTE}, titres en « {POLICE_TITRES} », texte en « {POLICE_TEXTE} » (Google Fonts). En haut, le logo ({LOGO} ; si « aucun », un carré arrondi couleur accent avec l&#x27;initiale de l&#x27;entreprise) et le nom de l&#x27;entreprise.
+- Les comptes sont dans data/comptes.json : e-mail, nom, rôle (« admin » ou « membre »), mot de passe haché avec crypto.scrypt et un sel unique (jamais en clair).
+- Session par cookie : HttpOnly, Secure, SameSite=Lax, valable 30 jours, sessions stockées dans data/sessions.json.
+- Après 5 mauvais mots de passe en 15 minutes pour la même adresse IP, on bloque 15 minutes.
+- Toute page ou API (sauf la page de connexion et ses fichiers) renvoie vers la connexion si on n&#x27;est pas connecté.
+- Bouton « Se déconnecter ».
+- Un petit script app/creer-compte.js pour créer ou modifier un compte en ligne de commande :
+  `node app/creer-compte.js email@exemple.fr &quot;Prénom Nom&quot; admin`
+  Il demande le mot de passe sans l&#x27;afficher (deux fois). Il accepte aussi une variable d&#x27;environnement MOT_DE_PASSE pour les tests automatiques, et une option --supprimer pour retirer un compte (ses sessions sont fermées).
+- Une fois connecté, la page app/public/index.html affiche pour l&#x27;instant : « Bonjour &lt;prénom&gt;, ton agent arrive bientôt. »
+
+Le service :
+- Un service systemd nommé {UTILISATEUR}-app qui lance le serveur en tant que {UTILISATEUR}, redémarre tout seul en cas d&#x27;arrêt et démarre avec le serveur. Ajoute les protections systemd simples : NoNewPrivileges, PrivateTmp, ProtectSystem=strict avec écriture autorisée seulement dans /home/{UTILISATEUR}.
+- Le service charge le fichier /home/{UTILISATEUR}/.claude-token.env s&#x27;il existe (on s&#x27;en servira pour l&#x27;agent).
+
+PROJET.md : écris-y en français simple la section « Paramètres » (ci-dessus), l&#x27;organisation des dossiers, comment démarrer/arrêter/voir les journaux du service, et ce qui a été fait à cette étape. À chaque étape suivante, on le relira avant de commencer et on le mettra à jour à la fin.
+
+Vérifications à faire toi-même avant de me rendre la main :
+- le service tourne (systemctl status) ;
+- sans être connecté, `curl` sur / renvoie vers la page de connexion ;
+- crée un compte de test avec creer-compte.js (MOT_DE_PASSE en variable), connecte-toi avec curl, vérifie que la page d&#x27;accueil répond, puis supprime ce compte de test ;
+- les fichiers de data/ ne sont lisibles que par {UTILISATEUR}.
+
+Ne touche à aucun autre site, service ou utilisateur du serveur. À la fin, donne-moi la commande exacte pour créer mon propre compte admin.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 3, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 3 du dépôt {DEPOT} (étiquette etape-03) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>4. Mettre l&#x27;outil en ligne sur son sous-domaine</h1>
+<h2>À la main : le sous-domaine (1 minute)</h2>
+<p>Chez le fournisseur du nom de domaine (GoDaddy, OVH, IONOS…), dans la zone DNS, ajouter :</p>
+<table><tr><th>Type</th><th>Nom</th><th>Valeur</th><th>TTL</th></tr><tr><td>A</td><td><code>agent</code> (la partie avant le domaine, ex. agent pour agent.monentreprise.fr)</td><td>l&#x27;adresse IP du VPS</td><td>1 heure ou moins</td></tr></table>
+<p>Puis créer son compte admin (le mot de passe est tapé par l&#x27;apprenant, il ne s&#x27;affiche pas) :</p>
+<div class="cmd"><div class="lab">Commande à lancer dans le terminal</div><pre>ssh -t vps &#x27;sudo -iu {UTILISATEUR} node app/creer-compte.js {EMAIL_ADMIN} &quot;Prénom Nom&quot; admin&#x27;</pre></div>
+<h2>Puis ce prompt</h2>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md pour comprendre le projet.
+
+J&#x27;ai créé le sous-domaine {DOMAINE} qui pointe vers l&#x27;adresse IP du serveur. Mets l&#x27;outil en ligne :
+1. Vérifie que {DOMAINE} pointe bien vers ce serveur (compare avec l&#x27;IP publique du serveur). Si ce n&#x27;est pas encore le cas, arrête-toi et dis-moi d&#x27;attendre.
+2. Crée une configuration nginx dédiée, dans un nouveau fichier à son nom, qui envoie {DOMAINE} vers 127.0.0.1:{PORT}. Elle doit supporter le temps réel (Server-Sent Events : pas de mise en tampon, délai long), les envois de fichiers jusqu&#x27;à 20 Mo, et transmettre l&#x27;IP réelle du visiteur (X-Forwarded-For) pour le blocage des mots de passe.
+3. Obtiens un certificat HTTPS Let&#x27;s Encrypt avec certbot pour ce sous-domaine seulement, et redirige le HTTP vers le HTTPS.
+4. Ajoute les en-têtes de sécurité habituels (HSTS, X-Content-Type-Options, Referrer-Policy, X-Frame-Options SAMEORIGIN).
+5. Teste toujours la configuration avec `nginx -t` avant de recharger nginx, et ne modifie aucun autre site.
+6. Si le serveur Node lit l&#x27;IP du visiteur, fais-lui utiliser X-Forwarded-For seulement quand la requête vient de 127.0.0.1.
+
+Vérifie toi-même : https://{DOMAINE} répond avec un certificat valide et affiche la page de connexion. Mets à jour PROJET.md.</pre></div>
+<p><b>Ce qu&#x27;on voit à la fin :</b> <a href="https://{DOMAINE}">https://{DOMAINE}</a> affiche la page de connexion, avec le cadenas.</p>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 4, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 4 du dépôt {DEPOT} (étiquette etape-04) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>5. Donner vie à l&#x27;agent : son bureau, la discussion, son cerveau</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> après connexion, on arrive dans le bureau de l&#x27;agent. On voit son personnage et on lui parle comme dans une messagerie. Il répond en direct et on voit ce qu&#x27;il est en train de faire.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md.
+
+Remplace la page d&#x27;accueil provisoire par le bureau de l&#x27;agent, et branche son cerveau (Claude Code).
+
+LE CERVEAU (côté serveur, dans app/server.js ou un fichier app/agent.js) :
+- L&#x27;agent travaille dans le dossier /home/{UTILISATEUR}/agent. Chaque message lance :
+  `claude -p --output-format stream-json --verbose --include-partial-messages --model sonnet --setting-sources project --strict-mcp-config` avec le message en entrée, dans ce dossier, en tant que {UTILISATEUR}.
+  Le binaire est ~/.local/bin/claude. Le jeton est passé dans la variable CLAUDE_CODE_OAUTH_TOKEN, lue dans /home/{UTILISATEUR}/.claude-token.env à CHAQUE lancement (pas seulement au démarrage du service).
+- LA CASE « CONNECTER CLAUDE » (admin) : dans le bureau, un bouton « Connecter Claude » ouvre une fenêtre avec un champ masqué où l&#x27;on colle la clé obtenue avec `claude setup-token`. Le serveur :
+  - nettoie la saisie (espaces, retours à la ligne, guillemets, préfixe « CLAUDE_CODE_OAUTH_TOKEN= » ou « export » collés par erreur, clé collée deux fois) et vérifie qu&#x27;elle commence par sk-ant-oat01- ;
+  - la teste en lançant `claude -p &quot;Réponds seulement : prêt&quot;` avec cette clé ;
+  - si la réponse est bonne, l&#x27;enregistre dans .claude-token.env (droits 600) et affiche « ✅ Claude est connecté » ; sinon, n&#x27;enregistre rien et affiche une erreur claire (« Clé refusée par Claude : refaites claude setup-token »).
+  - La clé n&#x27;est jamais renvoyée au navigateur ni écrite dans les journaux.
+  - En haut du bureau, une pastille indique en permanence « Claude connecté » (vert) ou « Claude non connecté » (orange, cliquable pour ouvrir la fenêtre). Si un membre non admin envoie un message alors que Claude n&#x27;est pas connecté, il voit « L&#x27;agent n&#x27;est pas encore connecté : demandez à un admin ».
+- Variables d&#x27;environnement à ajouter pour chaque lancement : ENABLE_CLAUDEAI_MCP_SERVERS=false et DISABLE_AUTOUPDATER=1.
+- Outils autorisés (--allowedTools) : Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Skill. Interdits (--disallowedTools) : Bash, Task, Agent, NotebookEdit.
+- Crée agent/.claude/settings.json (avec &quot;disableAllHooks&quot;: true) pour lui interdire, avec des règles permissions.deny de Claude Code de type Read(...) et Edit(...) (Edit couvre aussi l&#x27;écriture : pas de règles Write) :
+  - de lire ou modifier /home/{UTILISATEUR}/data, /home/{UTILISATEUR}/app, ~/.claude-token.env, ~/.claude, ~/.claude.json et /proc (sinon il pourrait lire le jeton dans /proc/self/environ) ;
+  - de modifier sa propre configuration : agent/CLAUDE.md, agent/.claude/settings.json, agent/.claude/settings.local.json et agent/.mcp.json.
+  - de modifier les fichiers cachés et les .md à la racine de /home/{UTILISATEUR} (~/.bashrc, ~/.profile, ~/.local/ qui contient le programme claude…) : sinon il pourrait réécrire claude et contourner l&#x27;interdiction de Bash.
+  Il garde le droit d&#x27;écrire partout ailleurs dans agent/ (y compris agent/.claude/skills/, dont on se servira plus tard).
+- Écris un agent/CLAUDE.md provisoire de quelques lignes : il s&#x27;appelle « {NOM_AGENT} », agent IA de {ENTREPRISE} ({ACTIVITE}) pour les fiches Google Business Profile ({ETABLISSEMENTS}), il répond en français sur ce ton : {TON}, il ne sort jamais de son dossier. (On écrira sa vraie fiche à l&#x27;étape suivante.)
+- Tous les fichiers de agent/ appartiennent à {UTILISATEUR} (l&#x27;outil devra pouvoir les modifier). Ce sont les règles ci-dessus, pas les droits Linux, qui protègent la configuration : ne redonne donc jamais Bash à l&#x27;agent.
+- Une discussion continue : garde le session_id renvoyé par Claude et utilise --resume pour les messages suivants. Bouton « Nouvelle discussion » pour repartir de zéro.
+- Un seul travail à la fois. Si un message arrive pendant que l&#x27;agent travaille, il est mis en file d&#x27;attente. Bouton « Arrêter » qui coupe le travail en cours.
+- Limite de sécurité : 10 minutes maximum par message.
+- Historique enregistré dans data/historique.jsonl (qui a parlé, quand, le texte, les outils utilisés, la durée, le coût estimé renvoyé par Claude).
+- Le temps réel vers la page se fait en Server-Sent Events : statut de l&#x27;agent (au repos / réfléchit / utilise un outil : lequel / a fini), morceaux de réponse, fin.
+
+L&#x27;INTERFACE : je veux une vraie application, belle et vivante, où l&#x27;on VOIT l&#x27;agent travailler. Pas une page de formulaire. Sans framework ni étape de compilation : HTML + CSS + JavaScript (modules), avec three.js (pour la scène 3D) chargé par une importmap depuis https://cdn.jsdelivr.net/npm/three@0.170.0/. Adapte la politique de sécurité du contenu (CSP) du serveur pour autoriser seulement ce qu&#x27;il faut : cdn.jsdelivr.net pour les scripts, Google Fonts pour les polices.
+
+1. LE SYSTÈME DE DESIGN (app/public/design.css, utilisé par toutes les pages, y compris la connexion et toutes celles des étapes suivantes). Il applique la charte de la section « Paramètres » de PROJET.md :
+   - Couleurs en variables CSS, toutes définies UNE SEULE FOIS en haut de design.css (:root) pour qu&#x27;on puisse changer la charte en modifiant ce seul bloc : --fond {COULEUR_FOND}, --surface (blanc, ou une teinte très claire du fond si le fond est sombre), --texte {COULEUR_TEXTE}, --texte-2 (texte secondaire, une version adoucie du texte), --accent {COULEUR_ACCENT}, --accent-pale (l&#x27;accent très éclairci, pour mes bulles de discussion), --accent-2 {COULEUR_ACCENT_2}, --vert #2E9E6A, --rouge #D9443B, --bordure (une teinte légèrement plus foncée que le fond). Le texte posé sur l&#x27;accent doit rester lisible (contraste AA) : blanc ou texte foncé selon la couleur d&#x27;accent.
+   - Polices Google Fonts : « {POLICE_TITRES} » pour les titres, « {POLICE_TEXTE} » pour le texte.
+   - Logo : {LOGO} (si « aucun », un carré arrondi couleur accent avec l&#x27;initiale de l&#x27;entreprise). S&#x27;il s&#x27;agit d&#x27;une adresse externe, recopie le fichier dans app/public/ plutôt que de le charger depuis un autre site.
+   - Consignes de charte en plus : {CHARTE_CONSIGNES}.
+   - Cartes blanches arrondies (16 px) avec une ombre douce, boutons « pilule » (orange plein pour l&#x27;action principale, contour pour les autres), pastilles d&#x27;état (point de couleur + texte), champs arrondis, focus visible, transitions de 150 ms.
+   - Composants réutilisables : .carte, .bouton, .bouton-secondaire, .pastille, .onglets, .fenetre (modale), .toast (message éphémère), .vide (état vide avec illustration et phrase d&#x27;aide), .squelette (chargement).
+
+2. LA SCÈNE DU BUREAU : elle est fournie toute prête dans le dépôt du kit ({DEPOT}). Télécharge-la directement sur le serveur depuis {DEPOT_BRUT}/kit/bureau3d.js et enregistre-la TELLE QUELLE dans /home/{UTILISATEUR}/app/public/bureau3d.js, sans la modifier. Lis le commentaire en tête du fichier : il explique comment l&#x27;utiliser.
+   - Dans l&#x27;interface : const bureau = creerBureau(conteneur, { nom: &quot;{NOM_AGENT}&quot;, entreprise: &lt;nom de l&#x27;entreprise&gt;, couleurCorps: &quot;{COULEUR_AGENT}&quot;, couleurYeux: &quot;{COULEUR_YEUX}&quot;, badge: &quot;{BADGE}&quot;, accessoire: &quot;{ACCESSOIRE}&quot;, fond: &quot;{COULEUR_FOND}&quot; }).
+   - Branche-le sur les événements en temps réel de l&#x27;agent : bureau.statut(&quot;message&quot;) quand on envoie un message, &quot;reflechit&quot; quand il réfléchit, &quot;outil&quot; avec le texte de ce qu&#x27;il fait (ex. « Je lis la fiche Google… ») quand il utilise un outil, &quot;repond&quot; pendant qu&#x27;il écrit sa réponse, &quot;fini&quot; à la fin, &quot;repos&quot; sinon.
+   - L&#x27;importmap de la page doit pointer « three » vers https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js et « three/addons/ » vers https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/.
+
+3. LA DISPOSITION :
+   - Sur ordinateur : la scène à gauche (environ 55 % de la largeur, pleine hauteur) et, à droite, un panneau avec des onglets « Discussion » (et, aux étapes suivantes, « Fiches Google », « À valider », « Réglages »). Au-dessus de la scène, une étiquette flottante : nom de l&#x27;agent, rôle et ce qu&#x27;il fait en ce moment.
+   - Sur mobile : la scène en haut (environ 40 % de l&#x27;écran, repliable), le panneau en dessous, et une barre d&#x27;onglets en bas de l&#x27;écran avec des icônes. L&#x27;en-tête tient sur une ligne : logo, pastille de connexion, menu ☰.
+   - Le nom de l&#x27;entreprise n&#x27;est écrit en dur nulle part : il vient de la variable NOM_ENTREPRISE du service systemd (Environment=&quot;NOM_ENTREPRISE={ENTREPRISE}&quot;, entre guillemets à cause des espaces), exposée aux pages (et à la page de connexion par une petite route publique /api/marque).
+   - En-tête fin : logo, nom de l&#x27;entreprise, pastille « Claude connecté », prénom de la personne connectée, déconnexion.
+
+4. LA DISCUSSION :
+   - bulles façon messagerie (les miennes à droite en orange pâle, celles de l&#x27;agent à gauche en blanc, avec sa petite tête), heure, réponse en Markdown (titres, listes, gras, liens, tableaux) ;
+   - la réponse s&#x27;écrit en direct ; pendant le travail, une ligne discrète montre les outils utilisés (« 🔧 Lit la fiche », dépliable) ;
+   - zone de saisie arrondie qui grandit avec le texte (Entrée = envoyer, Maj+Entrée = retour à la ligne), boutons « Arrêter » (visible seulement pendant le travail) et « Nouvelle discussion » ;
+   - état vide accueillant : la tête de l&#x27;agent, « Bonjour, je suis {NOM_AGENT} » et 3 suggestions cliquables ;
+   - l&#x27;historique revient au rechargement.
+
+5. LA MISE EN ROUTE (pour que la personne voie tout de suite où elle en est et que le système fonctionne) :
+   - Tant que tout n&#x27;est pas prêt, une carte « Mise en route » est ÉPINGLÉE en haut de l&#x27;onglet Discussion (au-dessus du fil des messages, pas dedans : elle ne doit jamais disparaître en faisant défiler). Elle est dépliée par défaut, y compris sur mobile (plus compacte), et se redéplie toute seule dès qu&#x27;une étape est franchie. Elle contient des étapes cochées en direct :
+     1) Connecter Claude (bouton « Connecter Claude ») ;
+     2) Connecter la fiche Google via Activepieces ;
+     3) Choisir le ou les établissements (selon le périmètre des paramètres) ;
+     4) Première lecture des fiches et des avis.
+     Les étapes 2 à 4 s&#x27;affichent « Bientôt disponible » tant que leur fonction n&#x27;est pas installée (elles arrivent aux étapes suivantes de l&#x27;installation) : la carte lit pour cela un petit état fourni par le serveur (GET /api/etat).
+   - Dans un onglet « Réglages » : une section « État du système » avec des voyants (Claude, Google/Activepieces, dernière lecture de la fiche, prochaine automatisation), toujours visible même une fois la mise en route terminée.
+
+Vérifie toi-même, de bout en bout : connecte-toi avec un compte de test (créé puis supprimé à la fin), envoie « Bonjour, présente-toi en une phrase » par l&#x27;API, vérifie que la réponse arrive en temps réel, qu&#x27;elle est enregistrée, et qu&#x27;un deuxième message se souvient du premier. Vérifie que l&#x27;agent ne peut pas lire data/comptes.json (demande-lui, il doit refuser ou échouer). Mets à jour PROJET.md.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 5, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 5 du dépôt {DEPOT} (étiquette etape-05) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>6. La fiche de l&#x27;agent et sa mémoire</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> l&#x27;agent sait qui il est et ce qu&#x27;il doit faire. Il retient ce qu&#x27;on lui apprend d&#x27;une discussion à l&#x27;autre, et la page « Mémoire » montre ce qu&#x27;il a retenu.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+1. LA FICHE DE L&#x27;AGENT : écris /home/{UTILISATEUR}/agent/CLAUDE.md. C&#x27;est la fiche de poste de l&#x27;agent, chargée à chaque message. Contenu :
+   - En tête, ces trois lignes d&#x27;import exactement :
+     @ENTREPRISE.md
+     @memoire.md
+     @regles.md
+   - Qui il est : « {NOM_AGENT} », spécialiste des fiches Google Business Profile de {ENTREPRISE} ({ACTIVITE}). Mission : des fiches complètes, visibles localement et vivantes.
+   - Son périmètre : {ETABLISSEMENTS}. S&#x27;il gère plusieurs établissements : chacun a sa propre fiche, ses avis, ses posts et ses particularités (adresse, horaires, offres locales) ; il ne mélange jamais les informations d&#x27;un établissement avec celles d&#x27;un autre ; quand une demande ne précise pas l&#x27;établissement et que ce n&#x27;est pas évident, il demande lequel (ou « tous ») ; il sait aussi donner une vue d&#x27;ensemble (comparaison des notes, des avis sans réponse, des fiches les moins complètes).
+   - Son ton : {TON}.
+   - Sa méthode :
+     - Audit du profil (par établissement) : nom, catégories principale et secondaires, horaires (y compris exceptionnels), adresse ou zone desservie, description, services ou produits, attributs, photos, liens. Il liste les manques et propose des corrections prêtes à coller. Avec plusieurs établissements, il vérifie aussi la cohérence entre les fiches (même nom de marque, mêmes catégories quand l&#x27;activité est la même).
+     - Reporting mensuel : vues, recherches, appels, itinéraires, clics vers le site, évolution de la note et des avis, par établissement puis en synthèse. Trois constats, trois actions.
+     - Réponses aux avis : courtes, personnalisées, au ton de la marque. Pour un avis négatif : reconnaître, ne jamais se justifier en public, proposer un contact direct. Il signale les avis suspects.
+     - Publications : 4 posts Google par mois (actu, offre, événement, conseil), de 150 à 300 mots, avec un appel à l&#x27;action et une idée de photo.
+     - Mots-clés locaux « activité + ville », sans bourrage. Questions/réponses fréquentes à proposer.
+     - Jamais de faux avis, jamais rien de contraire aux règles Google.
+   - Ses livrables vont dans agent/work/ : audit-gmb.md, reporting-gmb-AAAA-MM.md, reponses-avis.md, posts-gmb.md (avec plusieurs établissements, une section par établissement dans chaque fichier).
+   - Sa mémoire (voir le point 3).
+
+2. LE CONTEXTE :
+   - agent/ENTREPRISE.md : la fiche d&#x27;identité de l&#x27;entreprise. Remplis-la à partir du site {SITE_WEB} : parcours TOUTES ses pages utiles (accueil, offres ou services, établissements ou zones, tarifs, à propos, contact, FAQ, mentions légales) pour qu&#x27;elle soit directement exploitable.
+     Choisis les rubriques selon l&#x27;activité ({ACTIVITE}) : ce qui compte pour un client de CE métier. Par exemple, pour un lieu de loisirs : activités, formules, anniversaires et groupes, tarifs, âges, règles de sécurité ; pour un artisan : services, zones desservies, délais, devis, garanties et certifications ; pour un commerce ou un restaurant : produits ou carte, spécialités, réservation, livraison. Dans tous les cas : publics, ton, coordonnées et liens utiles (réservation, devis, rendez-vous, réseaux).
+     Ajoute une rubrique « Établissements » qui suit le périmètre ({ETABLISSEMENTS}) : pour chaque établissement, son nom exact, son adresse, ses horaires, sa page sur le site, son téléphone et ce qui lui est propre (offres, équipements, événements locaux). S&#x27;il n&#x27;y en a qu&#x27;un, une seule entrée. Si le site liste plus d&#x27;établissements que le périmètre, ne garde que ceux du périmètre.
+     Marque clairement « À compléter » ce que tu ne trouves pas. N&#x27;invente rien.
+   - agent/regles.md : les règles communes. L&#x27;agent peut lire ENTREPRISE.md et regles.md mais pas les modifier (règles deny) : seuls les admins les changent, depuis la page Mémoire.
+     Contenu de regles.md : Réponds en français, de façon courte et claire, sur ce ton : {TON}. Ne jamais inventer de chiffre ni de fait. Dire quand une information manque. Ne jamais afficher de clé, de jeton ou de mot de passe.
+
+3. LA MÉMOIRE :
+   - agent/memoire.md commence vide : un titre, une phrase d&#x27;explication et les quatre rubriques (Préférences, Décisions, Infos entreprise, À ne plus faire).
+   - Dans CLAUDE.md, ajoute une section « Ta mémoire » : quand on lui apprend quelque chose de durable (une préférence, une décision, une info sur l&#x27;entreprise, une erreur à ne plus refaire), il l&#x27;ajoute à memoire.md en une ligne datée, dans la bonne rubrique (Préférences / Décisions / Infos entreprise / À ne plus faire). Il ne garde pas les choses passagères. Il corrige ou supprime une ligne devenue fausse. Le fichier reste sous 150 lignes. Quand il retient quelque chose, il le dit en une phrase (« Je retiens : … »).
+   - Dans l&#x27;outil : une section « Mémoire » dans l&#x27;onglet « Réglages » du panneau (avec le système de design design.css) qui affiche memoire.md, ENTREPRISE.md et la fiche CLAUDE.md. Un admin peut les modifier et enregistrer ; un membre les lit seulement. Côté serveur, seuls ces trois fichiers sont lisibles ou modifiables par cette page.
+
+Vérifie toi-même (compte de test créé puis supprimé) : dis à l&#x27;agent « Retiens que nos réponses aux avis sont toujours signées &quot;{SIGNATURE}&quot; ». Vérifie que memoire.md contient la ligne. Puis, dans une NOUVELLE discussion, demande-lui comment il signe les réponses aux avis : il doit le savoir. Garde cette ligne dans memoire.md : c&#x27;est la vraie signature de l&#x27;entreprise. Mets à jour PROJET.md.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 6, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 6 du dépôt {DEPOT} (étiquette etape-06) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>7. Les skills</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> une page « Skills » qui liste les savoir-faire de l&#x27;agent. On en crée un en deux clics, et l&#x27;agent l&#x27;applique tout seul quand la demande s&#x27;y prête. On peut aussi lui demander de transformer une méthode en skill.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Ajoute les skills à l&#x27;agent. Un skill est une méthode écrite que l&#x27;agent applique quand la demande s&#x27;y prête. On utilise le format natif de Claude Code : un dossier agent/.claude/skills/&lt;identifiant&gt;/SKILL.md, avec en tête :
+---
+name: &lt;identifiant&gt;
+description: &lt;quand utiliser ce skill, en une ou deux phrases&gt;
+---
+puis la méthode en Markdown.
+
+1. Crée trois skills de départ. Ils doivent être OPÉRATIONNELS tout de suite : pas des modèles creux, mais des méthodes complètes, adaptées à l&#x27;entreprise. Lis d&#x27;abord agent/ENTREPRISE.md, agent/memoire.md et agent/regles.md, et appuie-toi sur les règles officielles de Google (recherche sur support.google.com : règles des contenus des fiches d&#x27;établissement, des posts et des avis), en citant la page source en bas de chaque skill.
+   - reponse-avis : répondre à un avis Google.
+     - Structure : remercier, reprendre un détail précis de l&#x27;avis (l&#x27;activité, le produit, le service, l&#x27;accueil, le délai…), une phrase sur l&#x27;entreprise ou l&#x27;établissement si utile, une conclusion. 40 à 80 mots pour un avis positif, un peu plus pour un avis négatif.
+     - Cas par cas : 5 étoiles avec texte, 5 étoiles sans texte, 3-4 étoiles, 1-2 étoiles (reconnaître, ne jamais se justifier ni donner de détails privés en public, proposer un contact direct avec le téléphone de l&#x27;entreprise), avis suspect ou hors sujet (ne pas répondre sur le fond, proposer de le signaler, expliquer comment).
+     - Ton et signature : ceux de ENTREPRISE.md et de la mémoire (la mémoire l&#x27;emporte). Si aucune signature n&#x27;est connue, signer « {SIGNATURE} ». Avec plusieurs établissements, la réponse parle de l&#x27;établissement concerné par l&#x27;avis (jamais d&#x27;un autre) et le téléphone proposé est le sien. Jamais deux fois la même formule d&#x27;ouverture : varier. Ne jamais recopier les exemples du skill : ils montrent le ton, pas le texte.
+     - Interdits : promesses non tenables, données personnelles du client, mots-clés plaqués, copier-coller.
+     - 6 exemples rédigés pour {ENTREPRISE} (un par cas, avec de vrais détails tirés de ENTREPRISE.md).
+   - post-google : rédiger un post Google Business.
+     - Types : nouveauté, offre (avec dates et conditions), événement (avec dates), conseil. Accroche dans les 80 premiers caractères (c&#x27;est ce qui s&#x27;affiche), 150 à 300 mots maximum (1 500 caractères), un seul bouton d&#x27;appel à l&#x27;action parmi ceux de Google (Réserver, Commander, Acheter, En savoir plus, S&#x27;inscrire, Appeler) avec le bon lien du site, une idée de photo précise.
+     - Règles Google : pas de numéro de téléphone ni d&#x27;e-mail dans le texte (le bouton « Appeler » existe), pas de hashtags, pas de majuscules criardes, pas de contenu trompeur, pas de superlatif invérifiable (« le meilleur », « le seul »), pas de comparaison avec des concurrents. Si l&#x27;activité touche à un domaine réglementé (santé, produits chimiques, alcool, finance, enfants…), respecter ses règles de communication : jamais d&#x27;allégation interdite ou invérifiable (« sans danger », « non toxique », « garanti »…).
+     - Un calendrier type sur 4 semaines adapté à l&#x27;activité et à la saison de {ENTREPRISE}, et 4 posts d&#x27;exemple prêts à publier. Avec plusieurs établissements : un post concerne UN établissement (lien vers sa page, ses dates, ses offres locales) ; une actualité commune à tout le réseau est déclinée établissement par établissement, sans texte identique d&#x27;une fiche à l&#x27;autre.
+   - audit-fiche : auditer la fiche Google Business.
+     - Check-list notée sur 100, par établissement : nom (exact, sans mot-clé ajouté : 10), catégorie principale et secondaires (15), description (750 caractères max, sans lien ni promo : 10), horaires y compris exceptionnels et cohérents avec le site (10), adresse ou zone desservie (10), services et produits (10), photos récentes (10), avis : volume, note et taux de réponse (15), posts dans les 30 derniers jours (5), questions/réponses (5).
+     - Pour chaque point : état, note, correction prête à coller, priorité (haute / moyenne / basse).
+     - Comparer avec ENTREPRISE.md (incohérences entre la fiche et le site = priorité haute).
+     - Sortie : tableau de synthèse + 3 constats + 3 actions, enregistré dans agent/work/audit-gmb.md. Avec plusieurs établissements : un tableau par établissement, puis un classement des fiches de la moins complète à la plus complète.
+
+2. Dans l&#x27;outil, ajoute une section « Skills » dans l&#x27;onglet « Réglages » du panneau (avec le système de design design.css) :
+   - la liste des skills (nom + description) ;
+   - un admin peut créer, modifier et supprimer un skill (nom, description, méthode), avec un aperçu ;
+   - un membre peut seulement les lire ;
+   - dans la zone de discussion, un petit bouton « / » permet de choisir un skill à appliquer au prochain message. Le message envoyé à l&#x27;agent se termine alors par « Applique le skill &lt;identifiant&gt;. » et l&#x27;interface montre une étiquette du skill sur la bulle.
+   - côté serveur, l&#x27;identifiant est nettoyé (minuscules, chiffres, tirets) pour qu&#x27;on ne puisse pas écrire ailleurs que dans agent/.claude/skills/.
+
+ATTENTION, point technique : Claude Code refuse toujours que l&#x27;agent écrive dans son dossier .claude/, même avec une autorisation. Pour qu&#x27;il puisse créer ses skills, ajoute un petit serveur MCP d&#x27;approbation app/mcp-approbation.js, passé à Claude avec --permission-prompt-tool : il répond « oui » uniquement pour écrire ou modifier agent/.claude/skills/&lt;identifiant&gt;/SKILL.md avec un en-tête valide, et « non » à tout le reste (les règles deny existantes passent avant lui). Ne passe jamais par le mode qui désactive toutes les vérifications. ATTENTION aussi : « --allowedTools Write » laisse l&#x27;agent écrire n&#x27;importe où sur le serveur. Retire Write et Edit de --allowedTools et lance Claude en mode --permission-mode acceptEdits : il écrit librement dans son dossier agent/, et toute écriture ailleurs passe par le serveur d&#x27;approbation, qui la refuse.
+
+3. Dans agent/CLAUDE.md, ajoute une section « Tes skills » : il utilise ses skills quand la demande s&#x27;y prête. Quand on lui dit « fais-en un skill » ou qu&#x27;il remarque qu&#x27;il refait souvent la même méthode, il propose de créer un skill, et s&#x27;il a l&#x27;accord, il l&#x27;écrit lui-même dans .claude/skills/&lt;identifiant&gt;/SKILL.md au bon format.
+
+Vérifie toi-même (compte de test créé puis supprimé) : invente un avis 2 étoiles réaliste pour {ENTREPRISE} (pour un établissement précis s&#x27;il y en a plusieurs), demande à l&#x27;agent d&#x27;y répondre, et vérifie dans le résultat brut de Claude qu&#x27;il a bien utilisé le skill reponse-avis (outil Skill) et respecté le ton de l&#x27;entreprise. Demande-lui aussi un post : il doit respecter les règles Google du skill (pas de téléphone, pas de hashtag). Puis demande-lui de créer un skill « demande-avis » (le message à envoyer à un client après {MOMENT_CLIENT} pour lui demander un avis Google, avec le lien d&#x27;avis du bon établissement) (signé comme les réponses aux avis : la mémoire, sinon « {SIGNATURE} ») et vérifie qu&#x27;il apparaît dans la section Skills : celui-là, on le garde. Pendant tes tests, ne publie rien et ne réponds à rien sur la vraie fiche Google, même si la connexion Activepieces existe. Mets à jour PROJET.md.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 7, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 7 du dépôt {DEPOT} (étiquette etape-07) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>8. Les connexions : API et MCP (Activepieces)</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> une page « Connexions ». On ajoute Activepieces en collant son adresse MCP, on clique sur « Connecter », on se connecte à Activepieces, et l&#x27;agent peut lire la fiche Google. On peut aussi brancher n&#x27;importe quel outil qui fournit une clé API.</p>
+<h2>À préparer à la main dans Activepieces</h2>
+<ol>
+<li>Créer un compte sur cloud.activepieces.com (gratuit pour commencer).</li>
+<li>Dans le projet, aller dans <b>Connexions</b>, puis <b>Nouvelle connexion</b> → <b>Google My Business</b>, et se connecter avec le compte Google qui gère la ou les fiches (bouton « Se connecter avec Google »). Pour un réseau, prendre de préférence le compte qui a accès à toutes les fiches du périmètre (propriétaire ou gestionnaire du groupe d&#x27;établissements) ; si les fiches sont réparties sur plusieurs comptes Google, créer une connexion par compte.</li>
+<li>C&#x27;est tout : l&#x27;outil se connecte ensuite à Activepieces tout seul, en un clic, et retrouve cette connexion Google.</li>
+</ol>
+<h2>Puis ce prompt</h2>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Ajoute une section « Connexions » dans l&#x27;onglet « Réglages » (réservée aux admins, avec le système de design design.css) pour brancher des outils externes à l&#x27;agent. Il y a deux types de connexion.
+
+MISE EN ROUTE : l&#x27;étape 2 de la carte « Mise en route » devient active. Elle affiche un gros bouton « Connecter ma fiche Google » qui crée directement la connexion « activepieces » (adresse https://cloud.activepieces.com/mcp pré-remplie) et ouvre la page de connexion Activepieces. Au retour, l&#x27;étape se coche, et le voyant « Google / Activepieces » de « État du système » passe au vert (connexion testée comme expliqué dans « Cas particulier Activepieces » plus bas ; s&#x27;il n&#x27;y a aucune connexion Google My Business active, on affiche « Ajoutez une connexion Google My Business dans votre projet Activepieces »).
+
+TYPE 1 — « Serveur MCP (connexion OAuth) », par exemple Activepieces (https://cloud.activepieces.com/mcp) :
+- L&#x27;admin donne un nom (ex. activepieces) et l&#x27;adresse du serveur MCP, puis clique sur « Connecter ».
+- Le serveur suit la norme MCP d&#x27;autorisation : découverte (/.well-known/oauth-protected-resource, sinon /.well-known/oauth-authorization-server sur l&#x27;origine), enregistrement automatique du client (Dynamic Client Registration) avec l&#x27;adresse de retour https://{DOMAINE}/api/oauth/retour, puis autorisation avec PKCE (S256), le paramètre resource et un state à usage unique lié à la session de l&#x27;admin.
+- Au retour, le serveur échange le code contre les jetons, les enregistre dans data/oauth/&lt;nom&gt;.json (droits 600) et affiche « Connecté ». Les jetons ne sont jamais renvoyés au navigateur.
+- L&#x27;agent parle à ce serveur grâce à un petit pont app/mcp-pont.js (stdio ↔ « Streamable HTTP », sans dépendance). Il ajoute le jeton, le renouvelle tout seul avec le refresh_token quand il expire ou sur une erreur 401, garde l&#x27;en-tête mcp-session-id, gère les réponses JSON et text/event-stream, et masque les jetons dans tous les messages d&#x27;erreur. Si la connexion a expiré, l&#x27;erreur dit à l&#x27;agent : « un admin doit reconnecter &lt;nom&gt; dans Connexions ».
+
+TYPE 2 — « API avec clé » :
+- L&#x27;admin donne un nom, l&#x27;URL de base de l&#x27;API, le nom de l&#x27;en-tête (ex. Authorization ou X-API-Key), un préfixe facultatif (ex. « Bearer ») et la clé. Une case « Autoriser l&#x27;écriture » est décochée par défaut.
+- La clé est enregistrée dans data/connexions.json (droits 600) et n&#x27;est plus jamais affichée en entier (seulement les 4 derniers caractères).
+- L&#x27;agent y accède par un petit serveur MCP stdio app/mcp-api.js avec un seul outil, appel_api(methode, chemin, corps). Il n&#x27;autorise que les chemins sous l&#x27;URL de base, n&#x27;accepte que GET si l&#x27;écriture n&#x27;est pas autorisée, ajoute la clé lui-même, coupe les réponses trop longues (50 000 caractères) et masque la clé si elle apparaît.
+
+CAS PARTICULIER ACTIVEPIECES (important) : son serveur MCP ne fournit pas d&#x27;outils Google dédiés, mais une quarantaine d&#x27;outils génériques ap_*. Les actions Google passent toutes par ap_run_action(pieceName, actionName, input, connectionExternalId), avec pieceName « @activepieces/piece-google-my-business ». Donc :
+- le test de la connexion appelle aussi ap_list_connections et compte les connexions ACTIVE de la pièce google-my-business (c&#x27;est ce nombre qui fait passer le voyant au vert, pas le nom des outils) ;
+- les outils d&#x27;aide en lecture (ap_list_connections, ap_research_pieces, ap_search_actions, ap_get_piece_props, ap_resolve_property_options, ap_resolve_property_chain, ap_setup_guide) sont libres ;
+- tous les autres outils ap_* (création de flows, tables, suppression…) sont toujours interdits à l&#x27;agent : il n&#x27;a pas à construire d&#x27;automatisations chez Activepieces ;
+- ap_run_action sera trié action par action à l&#x27;étape des validations.
+
+Pour chaque connexion, la page montre : le statut (connecté / à reconnecter / erreur), un bouton « Tester » (il lance le pont, fait initialize puis tools/list et affiche la liste des outils disponibles), « Reconnecter » et « Supprimer ».
+
+Branchement à l&#x27;agent : à chaque lancement de Claude, le serveur génère un fichier de configuration MCP temporaire (dans data/, droits 600, supprimé après) avec toutes les connexions actives, et le passe avec --mcp-config et --strict-mcp-config. Ajoute « mcp__&lt;nom&gt;__* » de chaque connexion aux outils autorisés (sauf les exceptions d&#x27;Activepieces ci-dessus). Les secrets ne passent que par des variables d&#x27;environnement ou des fichiers que l&#x27;agent ne peut pas lire (data/ est déjà interdit à l&#x27;agent).
+
+Dans agent/CLAUDE.md, ajoute une section « Tes connexions » : il regarde quels outils il a (mcp__…) avant de dire qu&#x27;il ne peut pas faire quelque chose. Il préfère les données réelles des fiches via Activepieces à toute supposition. S&#x27;il y a plusieurs connexions Google My Business, il utilise celle qui gère l&#x27;établissement concerné. Si une connexion est en erreur, il le dit simplement. En attendant l&#x27;étape des validations, il ne publie, ne modifie et ne répond à rien sur la fiche sans l&#x27;accord explicite de la personne : il propose d&#x27;abord le texte.
+
+Vérifie toi-même :
+- la découverte OAuth de https://cloud.activepieces.com/mcp fonctionne (affiche les adresses trouvées et le client_id obtenu par l&#x27;enregistrement, mais pas de secret) et le lien d&#x27;autorisation est bien formé ;
+- ajoute une connexion « API avec clé » de test vers une API publique qui n&#x27;a pas besoin de vraie clé (par exemple https://api.github.com avec une fausse clé dans un en-tête X-Test), teste-la avec un GET via le pont, vérifie qu&#x27;un POST est refusé et que la fausse clé n&#x27;apparaît dans aucune réponse ; puis supprime-la ;
+- l&#x27;agent voit bien l&#x27;outil appel_api quand la connexion existe.
+Je ferai moi-même le clic sur « Connecter » pour Activepieces. Mets à jour PROJET.md.</pre></div>
+<h2>À la main ensuite</h2>
+<p>Dans l&#x27;outil : Connexions → Activepieces → <b>Connecter</b>, puis se connecter à Activepieces et accepter. Enfin <b>Tester</b> : la liste des outils Google My Business doit apparaître.</p>
+<p>Premier test avec l&#x27;agent : « Fais l&#x27;audit de notre fiche Google à partir des vraies données. »</p>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 8, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 8 du dépôt {DEPOT} (étiquette etape-08) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>9. « Propose » ou « agit seul » : les validations</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> par défaut, l&#x27;agent lit librement mais ne publie rien sans accord. Ses actions arrivent sous forme de cartes « À valider ». Un clic sur « Valider » et c&#x27;est l&#x27;agent qui exécute. Un interrupteur permet de le laisser agir seul.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Je veux garder la main sur ce que l&#x27;agent fait dans le monde réel (répondre à un avis, publier un post, modifier la fiche Google).
+
+1. LE MODE DE L&#x27;AGENT : un réglage enregistré dans data/reglages.json, modifiable par un admin depuis le bureau (interrupteur bien visible, sous le personnage) :
+   - « Propose » (par défaut) : il lit et prépare, mais toute action qui modifie quelque chose passe par une validation ;
+   - « Agit seul » : il peut tout faire directement.
+
+2. LE TRI DES OUTILS : dans la section Connexions des Réglages, après « Tester », chaque outil de la connexion apparaît avec une case « Action (à valider) ». On la pré-coche automatiquement si le nom ou la description de l&#x27;outil parle d&#x27;écrire (create, update, delete, reply, post, publish, send, add, remove, patch, upload…). Les outils de lecture (get, list, search, find, read…) restent libres. L&#x27;admin peut corriger. Pour le type « API avec clé », l&#x27;outil appel_api est une action dès que l&#x27;écriture est autorisée. Ajoute alors à app/mcp-api.js un second outil lire_api (GET seulement), toujours libre, pour que l&#x27;agent puisse encore lire l&#x27;API en mode « Propose ». Le tri est enregistré par connexion.
+
+   Pour ap_run_action d&#x27;Activepieces, le tri se fait ACTION PAR ACTION, pas par outil : en mode « Propose », ap_run_action n&#x27;est ni autorisé ni interdit d&#x27;avance, et le serveur MCP d&#x27;approbation (celui de l&#x27;étape des skills, passé avec --permission-prompt-tool) décide selon actionName : lecture libre (list-accounts, list-locations, get-location, list-reviews, get-review, list-posts, get-post, list-media, get-media, et custom_api_call en GET), écriture refusée avec le message « utilise d&#x27;abord demander_validation » (create-post, update-post, delete-post, reply-to-review, create-reply, delete-review-reply, update-location, custom_api_call hors GET). Une pièce autre que google-my-business est refusée.
+
+3. LA DEMANDE DE VALIDATION : un petit serveur MCP stdio intégré, app/mcp-plateforme.js, toujours branché, avec l&#x27;outil demander_validation(titre, ce_que_je_vais_faire, outil_prevu, contenu_exact). Il crée une carte dans data/validations.json (statut « en attente ») et répond à l&#x27;agent : « Demande n°X envoyée, attends la réponse. »
+   En mode « Propose », le serveur ajoute à --disallowedTools tous les outils marqués « Action ». Dans agent/CLAUDE.md, section « Tes validations » (elle remplace toute règle plus ancienne du type « ne rien publier sans accord ») : s&#x27;il a besoin d&#x27;une action, il prépare tout, appelle demander_validation avec le contenu exact (le texte de la réponse à l&#x27;avis, du post, etc.), puis il s&#x27;arrête.
+
+4. LES CARTES « À VALIDER » dans un onglet « À valider » du panneau (pastille avec le nombre sur l&#x27;onglet, visibles par les admins ; dans la scène 3D, appelle bureau.statut(&quot;alerte&quot;) quand une carte attend : un panneau « ! » apparaît au-dessus du bureau) : titre, ce que l&#x27;agent va faire, le contenu exact (que l&#x27;admin peut corriger avant de valider), et les boutons « Valider » et « Refuser » (avec un motif facultatif).
+   - Valider : le serveur relance l&#x27;agent dans la même discussion, avec les outils d&#x27;action autorisés pour CE lancement seulement, et le message : « Validation n°X accordée par &lt;prénom&gt;. Exécute exactement cette action, rien d&#x27;autre : &lt;contenu final&gt;. Puis confirme en une phrase. » La carte passe à « exécutée » avec le résultat.
+   - Refuser : la carte passe à « refusée ». L&#x27;agent reçoit le motif dans la discussion et le retient dans sa mémoire s&#x27;il est utile pour la suite.
+   - Tout est historisé (qui, quand, quoi).
+
+Vérifie toi-même (compte de test créé puis supprimé) : avec une connexion « API avec clé » de test vers une API publique, écriture autorisée, en mode « Propose », demande à l&#x27;agent de faire un POST. Il doit créer une demande de validation, sans faire l&#x27;appel. Valide-la par l&#x27;API et vérifie qu&#x27;il la relance et l&#x27;exécute (une erreur de l&#x27;API de test est acceptable : c&#x27;est la tentative qui compte). Puis supprime la connexion et les cartes de test. Mets à jour PROJET.md.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 9, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 9 du dépôt {DEPOT} (étiquette etape-09) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>10. Le tableau de bord des fiches Google</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> un onglet « Fiches Google » dans l&#x27;outil. Avec plusieurs établissements, on choisit l&#x27;établissement en haut (ou « Vue d&#x27;ensemble »). On y trouve l&#x27;état de la fiche, les nouveaux avis avec un bouton « Répondre », les posts avec un bouton « Nouveau post », et les ajustements conseillés avec un bouton « Appliquer ». Chaque bouton confie une mission à l&#x27;agent. Tout ce qui modifie la fiche passe par une carte « À valider ».</p>
+<p><b>Prérequis :</b> Activepieces connecté (étape 8), avec la pièce Google My Business.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Je veux un tableau de bord simple des fiches Google Business de l&#x27;entreprise, que l&#x27;agent alimente et sur lequel on agit en un clic. Périmètre (voir « Paramètres » dans PROJET.md) : {ETABLISSEMENTS}. Tout ce qui suit doit marcher aussi bien avec un seul établissement qu&#x27;avec plusieurs : avec un seul, on ne montre ni sélecteur ni vue d&#x27;ensemble.
+
+LES DONNÉES (l&#x27;agent les récupère avec Activepieces, l&#x27;outil les affiche) :
+- Avec Activepieces, l&#x27;agent lit et agit sur la fiche par ap_run_action, avec pieceName « @activepieces/piece-google-my-business », l&#x27;externalId de la connexion Google (donné par ap_list_connections) et l&#x27;actionName :
+  - lire : list-accounts → list-locations → get-location, list-reviews, list-posts (ap_get_piece_props donne les champs d&#x27;entrée de chaque action) ;
+  - répondre à un avis : reply-to-review ; publier : create-post ; modifier la fiche : update-location (toujours après validation en mode « Propose »).
+  Activepieces refuse un ap_run_action sans champ input : toujours le passer ({} si vide).
+  Limite d&#x27;Activepieces : update-location ne modifie que le site web, les libellés et le code de magasin. Pour la description, le téléphone, les horaires, l&#x27;adresse et les catégories, l&#x27;agent prépare la valeur exacte et indique qu&#x27;une personne doit la saisir dans Google Business Profile.
+  Écris ce mode d&#x27;emploi dans agent/CLAUDE.md et dans les skills concernés.
+- Ajoute à app/mcp-plateforme.js l&#x27;outil tableau_enregistrer(etablissement, section, donnees), avec 4 sections :
+  - « fiche » : les champs principaux + un score sur 100 ;
+  - « avis » : la liste (id, auteur, note, texte, date, réponse existante) ;
+  - « posts » : la liste des derniers posts ;
+  - « ajustements » : la liste (id, champ, valeur actuelle, valeur proposée, pourquoi).
+  Le serveur vérifie le format et que l&#x27;établissement fait partie des établissements choisis, ajoute la date et enregistre dans data/gmb/&lt;identifiant de l&#x27;établissement&gt;/&lt;section&gt;.json.
+- Ajoute aussi tableau_lire(etablissement, section, id) pour retrouver un avis ou un ajustement par son identifiant.
+- La première fois, l&#x27;agent repère le ou les comptes et les établissements (list-accounts puis list-locations), et propose ceux qui correspondent au périmètre, en les rapprochant de la rubrique « Établissements » de ENTREPRISE.md. Un admin confirme la liste. Comme l&#x27;agent n&#x27;a pas le droit de modifier ENTREPRISE.md, ajoute l&#x27;outil noter_etablissements(liste de {compte, etablissement, nom, connexion}) qui écrit seulement une section « Fiches Google (identifiants) » dans ce fichier (un tableau : nom, identifiant d&#x27;établissement, compte, connexion Activepieces) et enregistre la même liste dans data/gmb/etablissements.json. Un admin peut retirer ou rajouter un établissement depuis Réglages → Connexions.
+- La garde (serveur MCP d&#x27;approbation) refuse toute lecture ou action qui vise un établissement absent de cette liste. Tant que la liste est vide, seuls list-accounts et list-locations sont libres.
+
+MISE EN ROUTE : les étapes 3 et 4 deviennent actives. Dès que la connexion activepieces est faite, le tri de ses outils (lecture libre / action à valider) est fait automatiquement, sans attendre qu&#x27;un admin clique sur « Tester », pour que l&#x27;agent puisse lire la fiche tout de suite. Étape 3 « Choisir les établissements » : bouton qui demande à l&#x27;agent de repérer les comptes et les établissements et de proposer la liste ; l&#x27;admin la confirme dans une carte (cases à cocher, tout coché par défaut pour ceux du périmètre). Étape 4 « Première lecture » : bouton qui lance « Actualiser » pour tous les établissements choisis. Quand les 4 étapes sont faites, la carte affiche « ✅ Votre agent est opérationnel », avec le nombre d&#x27;établissements suivis, le nombre d&#x27;avis trouvés et le nombre d&#x27;avis sans réponse, puis disparaît au rechargement suivant.
+
+L&#x27;ONGLET « FICHES GOOGLE » (onglet du panneau à côté de « Discussion » ; sur mobile, dans la barre d&#x27;onglets en bas ; avec le système de design design.css) :
+- S&#x27;il y a plusieurs établissements : en haut, un sélecteur (liste déroulante avec recherche s&#x27;il y en a plus de 8) avec « Vue d&#x27;ensemble » puis chaque établissement. Le choix est gardé dans le navigateur.
+  - « Vue d&#x27;ensemble » : un tableau d&#x27;une ligne par établissement (nom, note, nombre d&#x27;avis, avis sans réponse, score de la fiche, date du dernier post), triable, avec une pastille rouge sur les avis sans réponse ; un clic sur une ligne ouvre l&#x27;établissement. Bouton « Actualiser tout » (mission : « Actualise le tableau de bord de tous les établissements, un par un. »).
+- Pour un établissement : en haut, son nom, sa note moyenne, son nombre d&#x27;avis, le score de la fiche sur 100, la date de mise à jour, et un bouton « Actualiser » (mission : « Actualise le tableau de bord de &lt;nom&gt; : fiche, avis, posts et ajustements. »).
+- « Avis » : du plus récent au plus ancien, ceux sans réponse en premier avec une pastille « Nouveau ». Bouton « Répondre » sur chacun (mission : « Rédige une réponse à l&#x27;avis &lt;id&gt; de &lt;nom&gt; avec le skill reponse-avis, puis demande la validation pour la publier. »).
+- « Posts » : les derniers posts, et un bouton « Nouveau post » avec un petit formulaire (sujet, type : actu / offre / événement / conseil ; avec plusieurs établissements, une case « Décliner pour tous les établissements » qui confie la mission pour chacun). Mission : rédiger avec le skill post-google, puis demander la validation pour publier.
+- « Ajustements conseillés » : chaque ajustement a un bouton « Appliquer » (mission : « Applique l&#x27;ajustement &lt;id&gt; sur la fiche de &lt;nom&gt;, après validation. ») et un bouton « Ignorer ».
+- Les cartes « À valider » indiquent toujours l&#x27;établissement concerné, en évidence.
+- Une mission lancée depuis un bouton apparaît aussi dans la discussion. L&#x27;onglet se met à jour en direct (SSE) quand l&#x27;agent enregistre des données.
+- Quand il n&#x27;y a pas encore de données : « Cliquez sur Actualiser ».
+
+LES SKILLS (dans agent/.claude/skills/) :
+- Ajoute « appliquer-ajustement » : préparer la modification exacte (action update-location, champs et nouvelles valeurs), demander la validation avec ce contenu exact, puis, une fois validé, l&#x27;exécuter et relire la fiche pour confirmer.
+- Mets à jour « audit-fiche » : à la fin, enregistrer le score dans « fiche » et les manques dans « ajustements » avec tableau_enregistrer.
+- Mets à jour « reponse-avis » : réponse naturelle, jamais deux fois la même formule, prénom de l&#x27;auteur si disponible (sauf préférence contraire dans la mémoire), un détail précis repris de l&#x27;avis, signature tirée de la mémoire.
+
+Dans agent/CLAUDE.md, section « Ton tableau de bord » : après chaque lecture de données Google, il appelle tableau_enregistrer pour l&#x27;établissement concerné. Quand on lui demande « tous les établissements », il les traite un par un, dans l&#x27;ordre de la liste, et termine par une synthèse courte. Toute réponse à un avis, toute publication et toute modification de la fiche passent par demander_validation (en mode « Propose »).
+
+Vérifie toi-même (compte de test créé puis supprimé) :
+- l&#x27;onglet s&#x27;affiche bien sur ordinateur et sur mobile ;
+- tableau_enregistrer refuse un format invalide ;
+- avec de fausses données pour DEUX faux établissements (enregistrées puis effacées, liste d&#x27;établissements remise à l&#x27;état d&#x27;avant), chaque bloc s&#x27;affiche, le sélecteur et la vue d&#x27;ensemble fonctionnent, chaque bouton envoie la bonne mission avec le bon établissement, et tableau_enregistrer refuse un établissement hors liste ; avec un seul établissement, ni sélecteur ni vue d&#x27;ensemble ;
+- si Activepieces n&#x27;est pas connecté, « Actualiser » donne un message clair de l&#x27;agent (« connectez Activepieces dans Connexions ») et pas une erreur.
+Mets à jour PROJET.md.</pre></div>
+<h2>Premier test réel</h2>
+<p>Dans « Fiches Google », cliquer sur <b>Actualiser</b> (ou <b>Actualiser tout</b>). Puis, sur un avis, cliquer sur <b>Répondre</b> et vérifier qu&#x27;une carte « À valider » apparaît.</p>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 10, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 10 du dépôt {DEPOT} (étiquette etape-10) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>11. Le site internet et les photos</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> dans Réglages, deux nouvelles sections.</p>
+<ul>
+<li><b>Site internet :</b> on colle l&#x27;adresse du site, l&#x27;outil en relève toutes les pages, et l&#x27;agent met toujours le bon lien vers la bonne page dans ses posts.</li>
+<li><b>Photos :</b> on dépose ses photos depuis l&#x27;ordinateur ou le téléphone. L&#x27;outil les héberge, l&#x27;agent les regarde, les décrit et choisit la bonne photo pour chaque post.</li>
+</ul>
+<p><b>Pourquoi pas Google Drive ?</b> Google ne publie une photo que si elle est accessible par une adresse publique. Une photo dans Drive devrait de toute façon être recopiée et hébergée quelque part. Le plus simple, et le moins technique, c&#x27;est de déposer les photos directement dans l&#x27;outil, depuis son téléphone.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Je veux que l&#x27;agent soit autonome pour les liens et les photos de ses posts.
+
+1. LE SITE INTERNET (section « Site internet » dans l&#x27;onglet Réglages, admin ; avec design.css) :
+   - Un champ « Adresse du site » et un bouton « Analyser le site ». Le champ est pré-rempli avec le site trouvé dans agent/ENTREPRISE.md, et si le site n&#x27;a encore jamais été analysé, l&#x27;analyse se lance toute seule au démarrage de l&#x27;outil : l&#x27;admin n&#x27;a rien à faire, sauf corriger l&#x27;adresse si elle est fausse.
+   - Le serveur relève les pages : d&#x27;abord le sitemap (robots.txt puis /sitemap.xml ou /sitemap_index.xml, sitemaps imbriqués compris) ; à défaut, il suit les liens internes depuis l&#x27;accueil (même domaine, 200 pages au plus). Pour chaque page : adresse, titre, méta-description. Requêtes polies (une à la fois, délai court, 10 s maximum chacune, un user-agent clair). Seulement http/https sur le domaine indiqué, jamais d&#x27;adresse interne (127.0.0.1, réseau local).
+   - Résultat : la liste des pages, regroupées par rubrique (établissements, offres ou services, zones/villes, tarifs, blog, contact…), et, s&#x27;il y a plusieurs établissements, le rattachement de chaque page à son établissement quand c&#x27;est clair (page du parc, de l&#x27;agence, du magasin…), affichée dans la section avec le nombre de pages et la date. Enregistré dans data/site/pages.json et recopié en lecture seule pour l&#x27;agent dans agent/site.md (une ligne par page : titre — adresse — en quelques mots).
+   - Bouton « Actualiser », et actualisation automatique chaque lundi à 6 h.
+   - Dans agent/CLAUDE.md, section « Le site » : chaque lien qu&#x27;il met (bouton d&#x27;un post, réponse, conseil) vient de site.md, et c&#x27;est la page la plus précise pour le sujet (la page de l&#x27;établissement, de la commune ou du service plutôt que l&#x27;accueil). Avec plusieurs établissements, un post ou une réponse d&#x27;un établissement ne renvoie jamais vers la page d&#x27;un autre. Il n&#x27;invente jamais une adresse. agent/site.md est interdit en écriture pour l&#x27;agent.
+   - Dans les cartes « À valider », l&#x27;outil affiche un ⚠️ à côté de tout lien qui n&#x27;est pas dans la liste des pages du site.
+
+2. LES PHOTOS (section « Photos » dans l&#x27;onglet Réglages ; ajout et suppression réservés aux admins) :
+   - Dépôt par glisser-déposer ou bouton « Ajouter des photos » (plusieurs à la fois ; sur téléphone, cela ouvre l&#x27;appareil photo ou la galerie). JPEG, PNG ou WebP seulement, vérifiés par leur contenu (pas seulement l&#x27;extension), 10 Mo maximum chacune.
+   - Le serveur enregistre chaque photo sous un nom aléatoire impossible à deviner (ex. 3f9c…e1.jpg) dans data/photos/, et la sert publiquement, sans connexion, à l&#x27;adresse https://{DOMAINE}/photos/&lt;nom&gt; : c&#x27;est indispensable pour que Google puisse la récupérer lors d&#x27;une publication. Aucune autre page de data/ n&#x27;est publique. Avant de rendre une photo publique, le serveur retire ses métadonnées (en particulier la position GPS), en gardant seulement l&#x27;orientation.
+   - Un champ « Établissement » sur chaque photo (« Tous » par défaut ; s&#x27;il n&#x27;y a qu&#x27;un établissement, on ne l&#x27;affiche pas), qu&#x27;on choisit au dépôt et qu&#x27;on peut changer. Un filtre par établissement dans la galerie.
+   - Une galerie en vignettes : pour chaque photo, sa description, ses mots-clés, son établissement, la date d&#x27;ajout, et « Utilisée le … dans le post … » si elle a servi ; boutons « Modifier la description » et « Supprimer ».
+   - Après chaque ajout, l&#x27;agent regarde la photo et propose lui-même une description courte et des mots-clés (sujet, lieu si visible, service) : ajoute à app/mcp-plateforme.js l&#x27;outil photos_decrire(nom, description, mots_cles). L&#x27;agent voit les photos grâce à une copie en lecture seule dans agent/photos/ (il ne peut ni y écrire ni les supprimer).
+   - Ajoute aussi photos_lister(etablissement facultatif) (nom, adresse publique, description, mots-clés, établissement, dernières utilisations) et photo_utilisee(nom, post) pour noter qu&#x27;une photo a servi.
+   - Dans agent/CLAUDE.md, section « Les photos » : pour un post, il choisit une photo de la photothèque qui correspond au sujet, à l&#x27;établissement concerné (ou « Tous ») et qui n&#x27;a pas servi depuis au moins 4 semaines sur cette fiche ; il passe son adresse publique à create-post (champ mediaSourceUrl) ; il note l&#x27;utilisation (le serveur la note aussi lui-même quand un post validé est publié). La galerie signale les photos que Google risque de refuser (WebP, plus de 5 Mo, moins de 10 Ko ou moins de 250 px). S&#x27;il n&#x27;y a aucune photo adaptée, il le dit dans la carte et propose quelle photo prendre.
+   - Dans les cartes « À valider » d&#x27;un post, la photo choisie s&#x27;affiche en vignette, et l&#x27;admin peut en choisir une autre avant de valider.
+
+3. LE POST DE LA SEMAINE : mets à jour le modèle d&#x27;automatisation « Post de la semaine » (et l&#x27;automatisation existante si elle est déjà créée) : « Pour chaque établissement suivi, propose un post Google pour cette semaine avec le skill post-google, en variant le type par rapport à ses posts précédents, avec le lien de la page du site la plus adaptée et une photo de la photothèque, puis demande la validation pour le publier. » Mets aussi à jour le skill post-google avec ces règles de lien et de photo.
+
+Vérifie toi-même (compte de test créé puis supprimé) :
+- l&#x27;analyse du site de {ENTREPRISE} trouve ses pages (nombre, rubriques) et agent/site.md est rempli ;
+- un dépôt de 2 photos de test (génère-les, par exemple une image unie avec un texte), refus d&#x27;un faux .jpg qui n&#x27;est pas une image, adresse publique accessible sans connexion, adresse d&#x27;un fichier de data/ refusée ;
+- l&#x27;agent décrit une photo déposée ;
+- demande à l&#x27;agent un post (sans le publier) : la carte « À valider » contient un lien du site (sans ⚠️) et une photo en vignette.
+Ensuite, supprime les photos de test (garde l&#x27;analyse du site). Ne publie rien sur la vraie fiche Google. Mets à jour PROJET.md.</pre></div>
+<h2>À la main ensuite</h2>
+<ul>
+<li>Réglages → Site internet : vérifier que l&#x27;adresse pré-remplie est la bonne (l&#x27;analyse se fait toute seule).</li>
+<li>Réglages → Photos : déposer 10 à 20 photos par établissement depuis son téléphone (lieu, équipe, clients en situation avec leur accord, produits, réalisations, avant/après…).</li>
+</ul>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 11, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 11 du dépôt {DEPOT} (étiquette etape-11) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>12. Les automatisations</h1>
+<p><b>Quand :</b> après le tableau de bord. L&#x27;agent sait alors lire la fiche, répondre aux avis et publier, et chaque action passe par une validation. Automatiser, c&#x27;est simplement lui confier ces mêmes missions à heure fixe.</p>
+<p><b>Comment :</b> on ne choisit pas les automatisations à la place de l&#x27;entreprise. Au premier lancement, l&#x27;agent mène un court entretien : il demande ce que l&#x27;entreprise veut automatiser, à quel rythme, et s&#x27;il doit proposer ou agir seul. Il propose ensuite chaque automatisation sous forme de carte « Activer ». On peut aussi lui dire à tout moment « automatise ça ».</p>
+<p><b>Ce qu&#x27;on voit à la fin :</b> une page « Automatisations » avec des tâches programmées, par exemple « Nouveaux avis » chaque matin, « Post de la semaine » le lundi et « Bilan du mois » le 1er. Chacune a un interrupteur, un bouton « Lancer maintenant » et le résultat de son dernier passage. Avec plusieurs établissements, chaque automatisation passe sur tous les établissements suivis, ou seulement ceux qu&#x27;on coche.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Ajoute les automatisations : des missions que l&#x27;agent fait tout seul à heure fixe. Reste simple.
+
+1. LA SECTION « AUTOMATISATIONS » dans l&#x27;onglet « Réglages » (avec le système de design design.css ; création et modification réservées aux admins, lecture pour tous) :
+   - chaque automatisation a : un nom, la consigne donnée à l&#x27;agent (la mission), une fréquence (tous les jours / chaque semaine tel jour / chaque mois tel jour du mois) et une heure (fuseau Europe/Paris), un interrupteur actif / en pause, la date du dernier passage et son résultat en une ligne ;
+   - boutons « Lancer maintenant », « Modifier », « Supprimer » ;
+   - trois modèles prêts à ajouter en un clic (ajoutés en pause) :
+     - « Nouveaux avis », tous les jours à 9 h : « Actualise les avis de chaque établissement suivi. Pour chaque nouvel avis sans réponse, rédige une réponse avec le skill reponse-avis et demande la validation pour la publier. S&#x27;il n&#x27;y a rien de nouveau, dis-le en une phrase. »
+     - « Post de la semaine », le lundi à 9 h : « Pour chaque établissement suivi, propose un post Google pour cette semaine avec le skill post-google, en variant le type par rapport à ses posts précédents, avec le lien de la page du site la plus adaptée et une photo de la photothèque, puis demande la validation pour le publier. »
+     - « Bilan du mois », le 1er du mois à 9 h : « Fais l&#x27;audit de chaque fiche suivie avec le skill audit-fiche, mets à jour le tableau de bord et résume en 3 constats et 3 actions (avec plusieurs établissements : d&#x27;abord le classement des fiches, puis les 3 actions prioritaires pour le réseau). »
+   - Une automatisation peut viser tous les établissements (par défaut) ou une partie d&#x27;entre eux : champ « Établissements » (cases à cocher, masqué s&#x27;il n&#x27;y en a qu&#x27;un), rappelé au début de la consigne envoyée à l&#x27;agent.
+   - Tout est enregistré dans data/automatisations.json.
+
+2. LE PLANIFICATEUR (dans le serveur) : toutes les minutes, il regarde les automatisations actives arrivées à échéance et les met dans la file de l&#x27;agent, comme un message normal, mais signé « Automatisation : &lt;nom&gt; ». Il ne rattrape pas les passages manqués pendant un arrêt. Une automatisation ne peut pas être lancée deux fois en même temps. Le résultat (la dernière réponse de l&#x27;agent, en une ligne) est enregistré dans l&#x27;automatisation. Si l&#x27;agent a créé des cartes « À valider », la pastille de l&#x27;onglet « À valider » et le « ! » de la scène les montrent comme d&#x27;habitude. Le voyant « Prochaine automatisation » de « État du système » s&#x27;active et affiche la prochaine échéance (nom + jour + heure).
+   Chaque automatisation tourne dans sa propre discussion (pas dans la discussion principale), mais on voit son passage dans la discussion principale sous forme d&#x27;une ligne discrète : « 🕘 Nouveaux avis : 2 réponses à valider (Lyon, Nantes) ».
+
+3. L&#x27;ENTRETIEN DE DÉMARRAGE :
+   - Ajoute à app/mcp-plateforme.js l&#x27;outil proposer_automatisation(nom, consigne, frequence, jour, heure). Il crée une carte « Automatisation » dans les validations, avec un bouton « Activer » (admin). Au clic, l&#x27;automatisation est créée et activée.
+   - Dans agent/CLAUDE.md, section « Tes automatisations » : tant qu&#x27;aucune automatisation n&#x27;existe (la page de l&#x27;outil le lui indique en ajoutant au premier message de chaque discussion la ligne « [Automatisations actives : aucune] » ou la liste), il propose, au début d&#x27;une discussion, un court entretien de 3 questions maximum, une à la fois :
+     1) Qu&#x27;est-ce que vous aimeriez que je fasse tout seul sur vos fiches Google (répondre aux avis, publier, surveiller la fiche) ? Avec plusieurs établissements : pour tous, ou seulement certains ?
+     2) À quel rythme ?
+     3) Je vous propose tout avant de publier, ou je peux agir seul sur certaines choses ?
+     Puis il propose chaque automatisation avec proposer_automatisation, et note les choix dans sa mémoire. Plus tard, si on lui dit « automatise ça » ou s&#x27;il remarque qu&#x27;on lui demande souvent la même chose, il propose une automatisation de la même façon.
+   - La réponse à la question 3 règle le mode de l&#x27;agent (« Propose » ou « Agit seul »). L&#x27;agent ne peut pas le changer lui-même : il le recommande dans la carte, et c&#x27;est l&#x27;admin qui l&#x27;applique avec l&#x27;interrupteur.
+
+Vérifie toi-même (compte de test créé puis supprimé) : ajoute le modèle « Nouveaux avis », règle-le pour passer dans 2 minutes et vérifie que le planificateur le lance, qu&#x27;il tourne dans sa propre discussion, et que le résultat s&#x27;enregistre (si Activepieces n&#x27;est pas connecté, un message clair de l&#x27;agent suffit). Teste « Lancer maintenant ». Lance une nouvelle discussion et vérifie que l&#x27;agent propose l&#x27;entretien, puis que proposer_automatisation crée bien une carte « Activer » qui fonctionne. Remets ensuite tout à zéro (aucune automatisation, aucune carte de test). Mets à jour PROJET.md.</pre></div>
+<h2>Premier test réel</h2>
+<p>Ouvrir une nouvelle discussion et répondre aux 3 questions de l&#x27;agent. Cliquer sur <b>Activer</b> sur les cartes qu&#x27;il propose. Le lendemain à 9 h, vérifier les réponses aux avis dans « À valider ».</p>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 12, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 12 du dépôt {DEPOT} (étiquette etape-12) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>13. L&#x27;agent ajoute des fonctionnalités à son outil</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> on demande à l&#x27;agent « ajoute un bouton qui… ». Il code la fonctionnalité sur une copie de l&#x27;outil et montre les changements. On clique sur « Appliquer » et l&#x27;outil se met à jour. En cas de problème, un retour arrière se fait tout seul ou en un clic.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Je veux que l&#x27;agent puisse améliorer son propre outil (ajouter un bouton, une page, un tableau…), mais sans jamais casser l&#x27;outil en ligne. Crée « l&#x27;atelier ».
+
+1. LA DEMANDE : dans app/mcp-plateforme.js, ajoute l&#x27;outil proposer_fonctionnalite(titre, description_detaillee). Il crée une carte « Fonctionnalité » dans les validations, avec un bouton « Lancer la fabrication » (admin).
+   Dans agent/CLAUDE.md, section « Ton atelier » : quand on lui demande une amélioration de l&#x27;outil, ou qu&#x27;il en voit une utile, il la décrit précisément (ce qu&#x27;on voit, où, comment ça marche) avec proposer_fonctionnalite. Il ne touche jamais lui-même au code de l&#x27;outil en ligne. Ajoute aussi à ses règles deny les dossiers atelier/ et sauvegardes/.
+
+2. LA FABRICATION (au clic sur « Lancer la fabrication ») :
+   - Le serveur copie app/ dans /home/{UTILISATEUR}/atelier/&lt;n°&gt;/app (sans data/).
+   - Il lance Claude dans ce dossier (modèle sonnet, Read/Write/Edit/Glob/Grep, toujours sans Bash) avec la description, PROJET.md en lecture, et la consigne : faire le changement le plus simple et le plus propre, sans dépendance npm, sans toucher à la connexion, aux comptes ni aux secrets.
+   - Ensuite, le serveur vérifie lui-même : `node --check` sur chaque fichier .js modifié, et démarrage d&#x27;essai de la copie sur un port libre (avec un dossier data/ vide temporaire) qui doit répondre sur la page de connexion en moins de 10 secondes.
+   - La carte affiche le résumé de l&#x27;agent, la liste des fichiers modifiés et le diff (lisible, en couleurs), plus le résultat des vérifications. Bouton « Appliquer » (seulement si les vérifications sont passées) ou « Abandonner ».
+
+3. L&#x27;APPLICATION (au clic sur « Appliquer ») :
+   - sauvegarde complète de app/ dans /home/{UTILISATEUR}/sauvegardes/app-&lt;date-heure&gt;/ (on garde les 10 dernières) ;
+   - copie des fichiers modifiés dans app/ ;
+   - redémarrage de l&#x27;outil : le serveur répond d&#x27;abord à la page, puis s&#x27;arrête proprement, et systemd le relance.
+
+4. LE FILET DE SÉCURITÉ :
+   - Le service ne lance plus server.js directement mais un petit lanceur, app/lanceur.js (qui, lui, n&#x27;est jamais modifié par l&#x27;atelier). Il démarre server.js ; si une application vient d&#x27;avoir lieu (fichier marqueur dans data/) et que le serveur plante ou ne répond pas sur 127.0.0.1:{PORT} dans les 20 secondes, il restaure automatiquement la dernière sauvegarde, relance et note l&#x27;incident dans les validations.
+   - Une section « Historique des versions » dans l&#x27;onglet « Réglages » (admin) liste les sauvegardes, avec un bouton « Revenir à cette version ».
+   - L&#x27;atelier refuse de modifier app/lanceur.js, app/atelier.js (son propre filet), app/creer-compte.js et app/public/bureau3d.js (la scène fournie avec le kit). Le Claude de l&#x27;atelier n&#x27;a accès qu&#x27;à son dossier de copie : ni data/, ni la clé Claude, ni /proc (mêmes règles deny que l&#x27;agent, dans un .claude/settings.json créé dans la copie).
+
+Vérifie toi-même (compte de test créé puis supprimé) : demande à l&#x27;agent d&#x27;ajouter dans le bureau un compteur « Messages échangés aujourd&#x27;hui ». Lance la fabrication, contrôle le diff, applique, et vérifie que l&#x27;outil redémarre avec le compteur. Puis teste le filet : applique à la main une version volontairement cassée par le même chemin (marqueur + fichier cassé) et vérifie que le lanceur revient seul à la version précédente. Enfin, garde ou retire le compteur selon ce qui est le plus propre, et dis-moi ce que tu as fait. Mets à jour PROJET.md.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 13, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 13 du dépôt {DEPOT} (étiquette etape-13) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>14. Option : parler à son agent</h1>
+<p><b>Ce qu&#x27;on voit à la fin :</b> un bouton micro pour dicter son message, et un bouton pour que l&#x27;agent lise sa réponse à voix haute. Le tout dans le navigateur, sans service payant.</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Lis d&#x27;abord /home/{UTILISATEUR}/PROJET.md. Tout ce que tu crées dans /home/{UTILISATEUR} doit appartenir à {UTILISATEUR}.
+
+Ajoute la voix dans le bureau de l&#x27;agent, uniquement avec les fonctions du navigateur (aucun service payant, rien enregistré sur notre serveur ; à savoir : Chrome et Edge font la reconnaissance vocale chez Google ou Microsoft) :
+1. Un bouton micro 🎤 à côté de la zone de saisie. Il utilise la reconnaissance vocale du navigateur (SpeechRecognition / webkitSpeechRecognition, langue fr-FR) : le texte s&#x27;écrit en direct dans la zone de saisie, on peut le corriger, puis on l&#x27;envoie. Le bouton change d&#x27;aspect pendant l&#x27;écoute. Si le navigateur ne le permet pas, le bouton est masqué.
+2. Sur chaque réponse de l&#x27;agent, un petit bouton 🔊 qui lit la réponse à voix haute (speechSynthesis, voix française, sans lire les symboles Markdown). Un interrupteur « Lecture automatique » dans l&#x27;onglet Discussion lit chaque nouvelle réponse dès qu&#x27;elle est finie (réglage gardé dans le navigateur).
+3. Pendant la lecture à voix haute, appelle bureau.parle(true) (sa bouche bouge dans la scène 3D), puis bureau.parle(false) à la fin.
+4. Vérifie que l&#x27;en-tête Permissions-Policy (envoyé par nginx ou par le serveur Node) autorise le micro pour ce site (microphone=(self)), sans changer les autres sites.
+5. Dans agent/regles.md, ajoute : « Les messages peuvent être dictés à la voix : comprends l&#x27;intention malgré les fautes de transcription. »
+
+Vérifie que rien n&#x27;a cassé (la page se charge, aucune erreur dans la console) et mets à jour PROJET.md.</pre></div>
+<h2>Si ça ne marche pas</h2>
+<p>Décrivez d&#x27;abord ce que vous voyez à Claude (« J&#x27;ai collé le prompt 14, et je vois … au lieu de … ») : dans la plupart des cas, il corrige tout seul.</p>
+<p>Si vous êtes vraiment bloqué, ce prompt remet votre outil exactement dans l&#x27;état de la fin de cette étape :</p>
+<div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 14 du dépôt {DEPOT} (étiquette etape-14) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div></body></html>
