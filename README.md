@@ -21,6 +21,10 @@ Tout ce qui change d'une entreprise à l'autre (nom, activité, périmètre, ton
    python3 personnaliser.py exemples/newjump.md
    ```
    Les 14 prompts personnalisés et le document HTML sont créés dans `mes-prompts/<entreprise>/`. Le script signale ce qui reste à compléter.
+   Pour tout le parcours dans un seul fichier à ouvrir dans le navigateur (connexion SSH au VPS du client, sous-domaine, les 14 étapes avec un bouton « Copier » sur chaque prompt, résultat final) :
+   ```bash
+   python3 guide.py exemples/newjump.md
+   ```
 3. (Facultatif) Vérifier le kit : `python3 outils/tester-kit.py` contrôle les variables, la personnalisation pour un établissement et pour un réseau, le document et tous les liens publics.
 4. Coller les prompts dans Claude Code, dans l'ordre, un par un, en vérifiant « ce qu'on voit à la fin » avant de passer au suivant.
 
