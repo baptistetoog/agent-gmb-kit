@@ -41,7 +41,7 @@ L'INTERFACE : je veux une vraie application, belle et vivante, où l'on VOIT l'a
    - Polices Google Fonts : « {POLICE_TITRES} » pour les titres, « {POLICE_TEXTE} » pour le texte.
    - Logo : {LOGO} (si « aucun », un carré arrondi couleur accent avec l'initiale de l'entreprise). S'il s'agit d'une adresse externe, recopie le fichier dans app/public/ plutôt que de le charger depuis un autre site.
    - Consignes de charte en plus : {CHARTE_CONSIGNES}.
-   - Cartes blanches arrondies (16 px) avec une ombre douce, boutons « pilule » (orange plein pour l'action principale, contour pour les autres), pastilles d'état (point de couleur + texte), champs arrondis, focus visible, transitions de 150 ms.
+   - Cartes blanches arrondies (16 px) avec une ombre douce, boutons « pilule » (couleur --accent pleine pour l'action principale, contour pour les autres), pastilles d'état (point de couleur + texte), champs arrondis, focus visible, transitions de 150 ms.
    - Composants réutilisables : .carte, .bouton, .bouton-secondaire, .pastille, .onglets, .fenetre (modale), .toast (message éphémère), .vide (état vide avec illustration et phrase d'aide), .squelette (chargement).
 
 2. LA SCÈNE DU BUREAU : elle est fournie toute prête dans le dépôt du kit ({DEPOT}). Télécharge-la directement sur le serveur depuis {DEPOT_BRUT}/kit/bureau3d.js et enregistre-la TELLE QUELLE dans /home/{UTILISATEUR}/app/public/bureau3d.js, sans la modifier. Lis le commentaire en tête du fichier : il explique comment l'utiliser.
@@ -56,7 +56,7 @@ L'INTERFACE : je veux une vraie application, belle et vivante, où l'on VOIT l'a
    - En-tête fin : logo, nom de l'entreprise, pastille « Claude connecté », prénom de la personne connectée, déconnexion.
 
 4. LA DISCUSSION :
-   - bulles façon messagerie (les miennes à droite en orange pâle, celles de l'agent à gauche en blanc, avec sa petite tête), heure, réponse en Markdown (titres, listes, gras, liens, tableaux) ;
+   - bulles façon messagerie (les miennes à droite en --accent-pale, celles de l'agent à gauche en blanc, avec sa petite tête), heure, réponse en Markdown (titres, listes, gras, liens, tableaux) ;
    - la réponse s'écrit en direct ; pendant le travail, une ligne discrète montre les outils utilisés (« 🔧 Lit la fiche », dépliable) ;
    - zone de saisie arrondie qui grandit avec le texte (Entrée = envoyer, Maj+Entrée = retour à la ligne), boutons « Arrêter » (visible seulement pendant le travail) et « Nouvelle discussion » ;
    - état vide accueillant : la tête de l'agent, « Bonjour, je suis {NOM_AGENT} » et 3 suggestions cliquables ;

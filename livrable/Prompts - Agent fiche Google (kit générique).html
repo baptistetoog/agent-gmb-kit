@@ -25,7 +25,7 @@ a{color:#FF5C2A}
 <li>Toog Expertise : <a href="https://toog-expertise.app">https://toog-expertise.app</a></li>
 </ul>
 <h2>Utilisation</h2>
-<ol>
+<ol start="1">
 <li>Copier <code>parametres.md</code> (ou partir d&#x27;un exemple de <code>exemples/</code>) et remplir la colonne « Valeur ».</li>
 <li>Lancer :</li>
 </ol>
@@ -33,7 +33,7 @@ a{color:#FF5C2A}
 <p>   python3 personnaliser.py exemples/newjump.md</p>
 <p>   ```</p>
 <p>   Les 14 prompts personnalisés et le document HTML sont créés dans <code>mes-prompts/&lt;entreprise&gt;/</code>. Le script signale ce qui reste à compléter.</p>
-<ol>
+<ol start="3">
 <li>(Facultatif) Vérifier le kit : <code>python3 outils/tester-kit.py</code> contrôle les variables, la personnalisation pour un établissement et pour un réseau, le document et tous les liens publics.</li>
 <li>Coller les prompts dans Claude Code, dans l&#x27;ordre, un par un, en vérifiant « ce qu&#x27;on voit à la fin » avant de passer au suivant.</li>
 </ol>
@@ -66,7 +66,7 @@ Règles : ne modifie rien qui appartient à un autre utilisateur ou à un autre 
 <h2>À la main (1 minute)</h2>
 <p>Dans le terminal de son ordinateur :</p>
 <div class="cmd"><div class="lab">Commande à lancer dans le terminal</div><pre>claude setup-token</pre></div>
-<ol>
+<ol start="1">
 <li>Le navigateur s&#x27;ouvre. On se connecte à son compte Claude (Pro ou Max) et on clique sur <b>Autoriser</b>.</li>
 <li>La page affiche un code : on clique sur <b>Copier</b>, on revient dans le terminal, on colle (Cmd+V) et on appuie sur Entrée.</li>
 <li>Le terminal affiche la clé, qui commence par <code>sk-ant-oat01-…</code>. On la garde de côté, par exemple dans son gestionnaire de mots de passe : on ne la reverra plus.</li>
@@ -184,7 +184,7 @@ L&#x27;INTERFACE : je veux une vraie application, belle et vivante, où l&#x27;o
    - Polices Google Fonts : « {POLICE_TITRES} » pour les titres, « {POLICE_TEXTE} » pour le texte.
    - Logo : {LOGO} (si « aucun », un carré arrondi couleur accent avec l&#x27;initiale de l&#x27;entreprise). S&#x27;il s&#x27;agit d&#x27;une adresse externe, recopie le fichier dans app/public/ plutôt que de le charger depuis un autre site.
    - Consignes de charte en plus : {CHARTE_CONSIGNES}.
-   - Cartes blanches arrondies (16 px) avec une ombre douce, boutons « pilule » (orange plein pour l&#x27;action principale, contour pour les autres), pastilles d&#x27;état (point de couleur + texte), champs arrondis, focus visible, transitions de 150 ms.
+   - Cartes blanches arrondies (16 px) avec une ombre douce, boutons « pilule » (couleur --accent pleine pour l&#x27;action principale, contour pour les autres), pastilles d&#x27;état (point de couleur + texte), champs arrondis, focus visible, transitions de 150 ms.
    - Composants réutilisables : .carte, .bouton, .bouton-secondaire, .pastille, .onglets, .fenetre (modale), .toast (message éphémère), .vide (état vide avec illustration et phrase d&#x27;aide), .squelette (chargement).
 
 2. LA SCÈNE DU BUREAU : elle est fournie toute prête dans le dépôt du kit ({DEPOT}). Télécharge-la directement sur le serveur depuis {DEPOT_BRUT}/kit/bureau3d.js et enregistre-la TELLE QUELLE dans /home/{UTILISATEUR}/app/public/bureau3d.js, sans la modifier. Lis le commentaire en tête du fichier : il explique comment l&#x27;utiliser.
@@ -199,7 +199,7 @@ L&#x27;INTERFACE : je veux une vraie application, belle et vivante, où l&#x27;o
    - En-tête fin : logo, nom de l&#x27;entreprise, pastille « Claude connecté », prénom de la personne connectée, déconnexion.
 
 4. LA DISCUSSION :
-   - bulles façon messagerie (les miennes à droite en orange pâle, celles de l&#x27;agent à gauche en blanc, avec sa petite tête), heure, réponse en Markdown (titres, listes, gras, liens, tableaux) ;
+   - bulles façon messagerie (les miennes à droite en --accent-pale, celles de l&#x27;agent à gauche en blanc, avec sa petite tête), heure, réponse en Markdown (titres, listes, gras, liens, tableaux) ;
    - la réponse s&#x27;écrit en direct ; pendant le travail, une ligne discrète montre les outils utilisés (« 🔧 Lit la fiche », dépliable) ;
    - zone de saisie arrondie qui grandit avec le texte (Entrée = envoyer, Maj+Entrée = retour à la ligne), boutons « Arrêter » (visible seulement pendant le travail) et « Nouvelle discussion » ;
    - état vide accueillant : la tête de l&#x27;agent, « Bonjour, je suis {NOM_AGENT} » et 3 suggestions cliquables ;
@@ -303,7 +303,7 @@ Vérifie toi-même (compte de test créé puis supprimé) : invente un avis 2 é
 <div class="prompt"><div class="lab">Prompt à coller dans Claude Code</div><pre>Mon serveur est accessible par `ssh vps` (root). Remets mon outil exactement à l&#x27;état de l&#x27;étape 7 du dépôt {DEPOT} (étiquette etape-07) : récupère le dossier instance/app de cette étiquette et remplace /home/{UTILISATEUR}/app par celui-ci, en faisant d&#x27;abord une sauvegarde. Ne touche ni à mes données (/home/{UTILISATEUR}/data), ni à ma clé Claude, ni aux fichiers de mon agent (/home/{UTILISATEUR}/agent). Remplace dans le code le domaine, l&#x27;utilisateur, le port et la charte de l&#x27;exemple par les miens ({DOMAINE}, {UTILISATEUR}, {PORT}, et la charte notée dans la section « Paramètres » de PROJET.md), redémarre le service et vérifie que la page de connexion répond. Si cette étiquette n&#x27;existe pas (encore) dans le dépôt, ne touche à rien et dis-le-moi.</pre></div><h1>8. Les connexions : API et MCP (Activepieces)</h1>
 <p><b>Ce qu&#x27;on voit à la fin :</b> une page « Connexions ». On ajoute Activepieces en collant son adresse MCP, on clique sur « Connecter », on se connecte à Activepieces, et l&#x27;agent peut lire la fiche Google. On peut aussi brancher n&#x27;importe quel outil qui fournit une clé API.</p>
 <h2>À préparer à la main dans Activepieces</h2>
-<ol>
+<ol start="1">
 <li>Créer un compte sur cloud.activepieces.com (gratuit pour commencer).</li>
 <li>Dans le projet, aller dans <b>Connexions</b>, puis <b>Nouvelle connexion</b> → <b>Google My Business</b>, et se connecter avec le compte Google qui gère la ou les fiches (bouton « Se connecter avec Google »). Pour un réseau, prendre de préférence le compte qui a accès à toutes les fiches du périmètre (propriétaire ou gestionnaire du groupe d&#x27;établissements) ; si les fiches sont réparties sur plusieurs comptes Google, créer une connexion par compte.</li>
 <li>C&#x27;est tout : l&#x27;outil se connecte ensuite à Activepieces tout seul, en un clic, et retrouve cette connexion Google.</li>

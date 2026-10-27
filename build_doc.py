@@ -67,7 +67,7 @@ def md(texte):
             out.append(f"<li>{inline(item)}</li>")
         elif re.match(r"^\d+\. ", ligne):
             if liste != "ol":
-                fermer_liste(); out.append("<ol>"); liste = "ol"
+                fermer_liste(); out.append(f'<ol start="{ligne.split(".")[0]}">'); liste = "ol"
             item = re.sub(r'^\d+\. ', '', ligne)
             out.append(f"<li>{inline(item)}</li>")
         elif ligne.strip():
